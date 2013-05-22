@@ -1,0 +1,44 @@
+{
+    "name": "OpendataCH/Transport",
+    "description": "Swiss public transport API",
+    "homepage": "http://transport.opendata.ch/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Opendata.ch",
+            "homepage": "http://opendata.ch/"
+        },
+        {
+            "name": "Community contributions",
+            "homepage": "https://github.com/OpendataCH/Transport/contributors"
+        }
+    ],
+    "repositories": {
+        "xhprof": {
+            "type": "package",
+            "package": {
+                "name": "facebook/xhprof",
+                "version": "0.9.2",
+                "source": {
+                    "url": "git://github.com/facebook/xhprof.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        }
+    },
+    "require": {
+        "php": ">= 5.3.2",
+        "silex/silex": "1.0.*",
+        "kriswallsmith/buzz": "0.6",
+        "predis/predis": "0.7.*",
+        "twig/twig": "1.6.*",
+        "monolog/monolog": "1.0.*",
+        "facebook/xhprof": "dev-master",
+        "symfony/serializer": "2.0.*"
+    },
+    "autoload": {
+        "psr-0": {"Transport": "lib/"}
+    },
+    "minimum-stability": "dev"
+}

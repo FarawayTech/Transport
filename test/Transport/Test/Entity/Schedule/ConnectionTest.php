@@ -5,8 +5,6 @@ namespace Transport\Test\Entity\Schedule;
 use Transport\Entity;
 use Transport\Entity\Schedule\Connection;
 
-use Transport\ResultLimit;
-
 class ConnectionTest extends \PHPUnit_Framework_TestCase
 {
     protected function getConnection()
@@ -16,6 +14,8 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $journey->name = 'S1219278';
         $journey->category = 'S12';
         $journey->number = '19278';
+        $journey->capacity1st = 1;
+        $journey->capacity2nd = 2;
 
 
         $from = new Entity\Schedule\Stop();
@@ -55,12 +55,25 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $passList[1]->platform = '';
         $journey->passList = $passList;
 
-        $sections[] = array('journey' => $journey, 'departure' => $from, 'arrival' => $to);
+        $section = new Entity\Schedule\Section();
+        $section->journey = $journey;
+        $section->departure = $from;
+        $section->arrival = $to;
+
+
+		$service = new Entity\Schedule\Service();
+		$service->regular = 'daily';
 
         $connection = new Entity\Schedule\Connection();
         $connection->from = $from;
         $connection->to = $to;
-        $connection->sections = $sections;
+        $connection->duration = '00d00:28:00';
+        $connection->transfers = 0;
+        $connection->service = $service;
+        $connection->products = array('S12');
+        $connection->capacity1st = 1;
+        $connection->capacity2nd = 2;
+        $connection->sections = array($section);
 
         return $connection;
     }
@@ -68,7 +81,6 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     public function testCreateFromXml()
     {
         $xml = simplexml_load_file(__DIR__ . '/../../../../fixtures/connection.xml');
-        ResultLimit::unsetFields();
         $this->assertEquals($this->getConnection(), Connection::createFromXml($xml->ConRes->ConnectionList->Connection));
     }
 }

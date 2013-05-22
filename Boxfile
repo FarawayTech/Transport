@@ -1,0 +1,18 @@
+web1: 
+  name: transport
+  document_root: web 
+  shared_writable_dirs:
+    - var
+  php_extensions:
+    - curl
+    - xhprof
+  after_build:
+    - "mkdir -p /var/www/var/logs"
+    - "mkdir -p /var/www/var/xhprof"
+    - "mv /var/www/pagodabox.php /var/www/config.php"
+    - "curl -s http://getcomposer.org/installer | php"
+    - "php composer.phar install"
+
+cache1:
+  name: stats
+  type: redis
