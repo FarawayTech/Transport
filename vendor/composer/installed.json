@@ -16,7 +16,7 @@
         },
         "time": "2012-08-16 23:24:45",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "description": "XHProf: A Hierarchical Profiler for PHP"
     },
     {
@@ -42,7 +42,7 @@
         },
         "time": "2012-05-25 05:19:16",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Buzz": "lib/"
@@ -86,7 +86,7 @@
         },
         "time": "2011-10-24 01:39:02",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Monolog": "src/"
@@ -135,7 +135,7 @@
                 "dev-master": "1.0.x-dev"
             }
         },
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Pimple": "lib/"
@@ -177,7 +177,7 @@
         },
         "time": "2012-09-03 17:53:00",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Predis": "lib/"
@@ -238,7 +238,7 @@
                 "dev-master": "2.1-dev"
             }
         },
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Symfony\\Component\\Routing": ""
@@ -286,7 +286,7 @@
                 "dev-master": "2.1-dev"
             }
         },
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Symfony\\Component\\HttpFoundation": "",
@@ -342,7 +342,7 @@
                 "dev-master": "2.1-dev"
             }
         },
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Symfony\\Component\\EventDispatcher": ""
@@ -410,7 +410,7 @@
                 "dev-master": "2.1-dev"
             }
         },
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Symfony\\Component\\HttpKernel": ""
@@ -485,7 +485,7 @@
                 "dev-master": "1.0-dev"
             }
         },
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Silex": "src/"
@@ -532,7 +532,7 @@
         },
         "time": "2012-08-28 06:43:14",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Symfony\\Component\\Serializer": ""
@@ -574,7 +574,7 @@
         },
         "time": "2012-04-11 01:00:38",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Twig_": "lib/"
