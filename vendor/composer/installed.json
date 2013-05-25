@@ -42,7 +42,7 @@
         },
         "time": "2012-05-25 05:19:16",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-0": {
                 "Buzz": "lib/"
@@ -86,7 +86,7 @@
         },
         "time": "2011-10-24 01:39:02",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-0": {
                 "Monolog": "src/"
@@ -574,7 +574,7 @@
         },
         "time": "2012-04-11 01:00:38",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-0": {
                 "Twig_": "lib/"
