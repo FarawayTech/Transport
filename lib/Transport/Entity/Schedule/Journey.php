@@ -2,9 +2,16 @@
 
 namespace Transport\Entity\Schedule;
 
+class FribourgJourney
+{
+    public static $PLACES = array('Fribourg', 'Marly', 'Villars-sur-Glâne', 'Granges-Paccot', 'Givisiez');
+    public static $COLORS = array('1' => 'ff53B401', '2' => 'ffD83B38', '3' => 'ffFFD012',
+                                  '4' => 'ffF08B32', '5' => 'ff2F7CE3', '6' => 'ff3F2072',
+                                  '7' => 'ff833816');
+}
+
 class Journey
 {
-
     /**
      * @var string
      */
@@ -45,6 +52,23 @@ class Journey
      */
     public $capacity2nd = null;
 
+    /**
+     * @var string
+     */
+    public $color;
+
+    static public function resolveColor(Journey $obj)
+    {
+        $dest_pieces = explode(',', $obj->to);
+        $dest_piece = $dest_pieces[0];
+        if (in_array($dest_piece, FribourgJourney::$PLACES)) {
+            if (isset(FribourgJourney::$COLORS[$obj->number])) {
+                return FribourgJourney::$COLORS[$obj->number];
+            }
+        }
+        return null;
+    }
+
     static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Journey $obj = null)
     {
         if (!$obj) {
@@ -54,7 +78,7 @@ class Journey
         // TODO: get attributes
         if ($xml->JourneyAttributeList) {
             foreach ($xml->JourneyAttributeList->JourneyAttribute AS $journeyAttribute) {
-            
+
                 switch ($journeyAttribute->Attribute['type']) {
                     case 'NAME':
                         $obj->name = (string) $journeyAttribute->Attribute->AttributeVariant->Text;
@@ -97,11 +121,13 @@ class Journey
         }
 
         if (count($capacities1st) > 0) {
-            $obj->capacity1st = max($capacities1st);   
+            $obj->capacity1st = max($capacities1st);
         }
         if (count($capacities2nd) > 0) {
-            $obj->capacity2nd = max($capacities2nd);   
+            $obj->capacity2nd = max($capacities2nd);
         }
+
+        $obj->color = self::resolveColor($obj);
 
         return $obj;
     }
