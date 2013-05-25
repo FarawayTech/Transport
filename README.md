@@ -6,6 +6,12 @@ The Transport API allows interested developers to build their own applications u
 
 Feel free to fork this project implement your own ideas or send pull requests.
 
+## Heroku specific
+
+```
+$ git push heroku heroku:master
+```
+
 ## Installation
 
 ```
