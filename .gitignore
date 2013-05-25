@@ -3,5 +3,4 @@ var/cache/
 var/logs/
 var/xhprof/
 composer.phar
-vendor/
 .idea/
