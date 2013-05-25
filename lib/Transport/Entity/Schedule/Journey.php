@@ -12,6 +12,8 @@ class FribourgJourney
 
 class Journey
 {
+    const CAT_REGEX = "/BUS|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2}/";
+
     /**
      * @var string
      */
@@ -57,6 +59,11 @@ class Journey
      */
     public $color;
 
+    /**
+     * @var string
+     */
+    public $resolvedNumber;
+
     static public function resolveColor(Journey $obj)
     {
         $dest_pieces = explode(',', $obj->to);
@@ -67,6 +74,16 @@ class Journey
             }
         }
         return null;
+    }
+
+    static public function resolveNumber(Journey $obj)
+    {
+        $resolvedNumber = $obj->number;
+        if (preg_match(self::CAT_REGEX, $obj->category))
+        {
+            $resolvedNumber = $obj->category;
+        }
+        return $resolvedNumber;
     }
 
     static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Journey $obj = null)
@@ -128,6 +145,7 @@ class Journey
         }
 
         $obj->color = self::resolveColor($obj);
+        $obj->resolvedNumber = self::resolveNumber($obj);
 
         return $obj;
     }
