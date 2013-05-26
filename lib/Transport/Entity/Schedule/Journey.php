@@ -12,7 +12,7 @@ class FribourgJourney
 
 class Journey
 {
-    const CAT_REGEX = "/^(BUS|BAT|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
+    const CAT_REGEX = "/^(BUS|BAT|BAV|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
 
     /**
      * @var string
