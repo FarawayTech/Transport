@@ -12,7 +12,7 @@ class FribourgJourney
 
 class BielJourney
 {
-    public static $PLACES = array('Biel\/Bienne', 'Nidau', 'Brügg BE', 'Tüscherz');
+    public static $PLACES = array('Biel/Bienne', 'Nidau', 'Brügg BE', 'Tüscherz');
     public static $COLORS = array('1' => 'ffd92a31', '2' => 'ff293e80', '4' => 'ffe4822e',
                                   '5' => 'ff116630', '6' => 'ff9fc841', '7' => 'ffdf4891',
                                   '8' => 'ff7c4391', '11' => 'ff9f2e36');
@@ -79,6 +79,11 @@ class Journey
         if (in_array($dest_piece, FribourgJourney::$PLACES)) {
             if (isset(FribourgJourney::$COLORS[$obj->number])) {
                 return FribourgJourney::$COLORS[$obj->number];
+            }
+        }
+        else if (in_array($dest_piece, BielJourney::$PLACES)) {
+            if (isset(BielJourney::$COLORS[$obj->number])) {
+                return BielJourney::$COLORS[$obj->number];
             }
         }
         return null;
