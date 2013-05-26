@@ -10,9 +10,17 @@ class FribourgJourney
                                   '7' => 'ff833816');
 }
 
+class BielJourney
+{
+    public static $PLACES = array('Biel\/Bienne', 'Nidau', 'Brügg BE', 'Tüscherz');
+    public static $COLORS = array('1' => 'ffd92a31', '2' => 'ff293e80', '4' => 'ffe4822e',
+                                  '5' => 'ff116630', '6' => 'ff9fc841', '7' => 'ffdf4891',
+                                  '8' => 'ff7c4391', '11' => 'ff9f2e36');
+}
+
 class Journey
 {
-    const CAT_REGEX = "/^(BUS|BAT|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
+    const CAT_REGEX = "/^(BUS|BAT|BAV|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
 
     /**
      * @var string
@@ -79,7 +87,7 @@ class Journey
     static public function resolveNumber(Journey $obj)
     {
         $resolvedNumber = $obj->number;
-        if (preg_match(self::CAT_REGEX, $obj->category))
+        if (is_null($obj->color) && preg_match(self::CAT_REGEX, $obj->category))
         {
             $resolvedNumber = $obj->category;
         }
