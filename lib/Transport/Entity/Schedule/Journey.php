@@ -18,6 +18,16 @@ class BielJourney
                                   '8' => 'ff7c4391', '11' => 'ff9f2e36');
 }
 
+class BaselJourney
+{
+    public static $PLACES = array('Basel', 'Pretteln', 'Rodersdorf', 'Dornach-Arlesheim', 'Ettingen',
+    'Flüh', 'Basel Wiesenplatz', 'Birsfelden', 'Allschwil', 'Riehen', 'Hüslimatt', 'Aesch', 'St-Louis Grenze',
+    'Basel Messeplatz');
+    public static $COLORS = array('1' => 'ff804b2f', '2' => 'ffa8834a', '3' => 'ff3c4796', '6' => 'ff006ab0',
+                                  '8' => 'ffeb6ea2', '10' => 'ffffca0a','11' => 'ffe30910', '14' => 'ffeb7b05',
+                                  '15' => 'ff00963a', '16' => 'ffaecc06', '17' => 'ff00a3e3', '21' => 'ff00a191');
+}
+
 class Journey
 {
     const CAT_REGEX = "/^(BUS|BAT|BAV|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
@@ -72,6 +82,7 @@ class Journey
      */
     public $resolvedNumber;
 
+    // TODO: how to optimize it?
     static public function resolveColor(Journey $obj)
     {
         $dest_pieces = explode(',', $obj->to);
@@ -84,6 +95,11 @@ class Journey
         else if (in_array($dest_piece, BielJourney::$PLACES)) {
             if (isset(BielJourney::$COLORS[$obj->number])) {
                 return BielJourney::$COLORS[$obj->number];
+            }
+        }
+        else if (in_array($dest_piece, BaselJourney::$PLACES)) {
+            if (isset(BaselJourney::$COLORS[$obj->number])) {
+                return BaselJourney::$COLORS[$obj->number];
             }
         }
         return null;
