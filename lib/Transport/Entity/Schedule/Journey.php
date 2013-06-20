@@ -20,7 +20,7 @@ class BielJourney
 
 class BaselJourney
 {
-    public static $PLACES = array('Basel', 'Pretteln', 'Rodersdorf', 'Dornach-Arlesheim', 'Ettingen',
+    public static $PLACES = array('Basel', 'Pratteln', 'Rodersdorf', 'Dornach-Arlesheim', 'Ettingen',
     'Flüh', 'Basel Wiesenplatz', 'Birsfelden', 'Allschwil', 'Riehen', 'Hüslimatt', 'Aesch', 'St-Louis Grenze',
     'Basel Messeplatz');
     public static $COLORS = array('1' => 'ff804b2f', '2' => 'ffa8834a', '3' => 'ff3c4796', '6' => 'ff006ab0',
@@ -30,7 +30,7 @@ class BaselJourney
 
 class Journey
 {
-    const CAT_REGEX = "/^(BUS|BAT|BAV|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
+    const CAT_REGEX = "/^(BUS|FUN|BAT|BAV|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
 
     /**
      * @var string
