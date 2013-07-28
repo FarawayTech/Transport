@@ -9,7 +9,14 @@ Feel free to fork this project implement your own ideas or send pull requests.
 ## Heroku specific
 
 ```
-$ git push heroku heroku:master
+$ git checkout master
+$ git fetch upstream
+$ git merge upstream/master
+$ git checkout heroku
+$ git merge master
+$ rm -rf vendor
+$ php composer.phar install
+$ git push heroku heroku:heroku
 ```
 
 ## Installation
