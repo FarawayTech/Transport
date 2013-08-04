@@ -15,8 +15,8 @@ $ git merge upstream/master
 $ git checkout heroku
 $ git merge master
 $ rm -rf vendor
-$ php composer.phar install
-$ git push heroku heroku:heroku
+$ php composer.phar install --prefer-dist
+$ git push heroku heroku:master
 ```
 
 ## Installation
