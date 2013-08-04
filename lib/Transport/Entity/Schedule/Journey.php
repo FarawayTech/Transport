@@ -2,34 +2,26 @@
 
 namespace Transport\Entity\Schedule;
 
-class FribourgJourney
-{
-    public static $PLACES = array('Fribourg', 'Marly', 'Villars-sur-Glâne', 'Granges-Paccot', 'Givisiez');
-    public static $COLORS = array('1' => 'ff53B401', '2' => 'ffD83B38', '3' => 'ffFFD012',
-                                  '4' => 'ffF08B32', '5' => 'ff2F7CE3', '6' => 'ff3F2072',
-                                  '7' => 'ff833816');
-}
-
-class BielJourney
-{
-    public static $PLACES = array('Biel/Bienne', 'Nidau', 'Brügg BE', 'Tüscherz');
-    public static $COLORS = array('1' => 'ffd92a31', '2' => 'ff293e80', '4' => 'ffe4822e',
-                                  '5' => 'ff116630', '6' => 'ff9fc841', '7' => 'ffdf4891',
-                                  '8' => 'ff7c4391', '11' => 'ff9f2e36');
-}
-
-class BaselJourney
-{
-    public static $PLACES = array('Basel', 'Pratteln', 'Rodersdorf', 'Dornach-Arlesheim', 'Ettingen',
-    'Flüh', 'Basel Wiesenplatz', 'Birsfelden', 'Allschwil', 'Riehen', 'Hüslimatt', 'Aesch', 'St-Louis Grenze',
-    'Basel Messeplatz');
-    public static $COLORS = array('1' => 'ff804b2f', '2' => 'ffa8834a', '3' => 'ff3c4796', '6' => 'ff006ab0',
-                                  '8' => 'ffeb6ea2', '10' => 'ffffca0a','11' => 'ffe30910', '14' => 'ffeb7b05',
-                                  '15' => 'ff00963a', '16' => 'ffaecc06', '17' => 'ff00a3e3', '21' => 'ff00a191');
-}
 
 class Journey
 {
+    public static $JOURNEYS =
+    array('BaselJourney' => array('places' => array('Basel', 'Pratteln', 'Rodersdorf', 'Dornach-Arlesheim', 'Ettingen',
+                                                    'Flüh', 'Basel Wiesenplatz', 'Birsfelden', 'Allschwil', 'Riehen',
+                                                    'Hüslimatt', 'Aesch', 'St-Louis Grenze', 'Basel Messeplatz'),
+                                  'colors' => array('1' => 'ff804b2f', '2' => 'ffa8834a', '3' => 'ff3c4796',
+                                                    '6' => 'ff006ab0', '8' => 'ffeb6ea2', '10' => 'ffffca0a',
+                                                    '11' => 'ffe30910', '14' => 'ffeb7b05', '15' => 'ff00963a',
+                                                    '16' => 'ffaecc06', '17' => 'ff00a3e3', '21' => 'ff00a191')),
+          'BielJourney' => array('places' => array('Biel/Bienne', 'Nidau', 'Brügg BE', 'Tüscherz'),
+                                 'colors' => array('1' => 'ffd92a31', '2' => 'ff293e80', '4' => 'ffe4822e',
+                                                   '5' => 'ff116630', '6' => 'ff9fc841', '7' => 'ffdf4891',
+                                                   '8' => 'ff7c4391', '11' => 'ff9f2e36')),
+          'FribourgJourney' => array('places' => array('Fribourg', 'Marly', 'Villars-sur-Glâne', 'Granges-Paccot',
+                                                       'Givisiez'),
+                                     'colors' => array('1' => 'ff53B401', '2' => 'ffD83B38', '3' => 'ffFFD012',
+                                                       '4' => 'ffF08B32', '5' => 'ff2F7CE3', '6' => 'ff3F2072',
+                                                       '7' => 'ff833816')));
     const CAT_REGEX = "/^(BUS|FUN|BAT|BAV|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
 
     /**
@@ -82,24 +74,16 @@ class Journey
      */
     public $resolvedNumber;
 
-    // TODO: how to optimize it?
     static public function resolveColor(Journey $obj)
     {
         $dest_pieces = explode(',', $obj->to);
         $dest_piece = $dest_pieces[0];
-        if (in_array($dest_piece, FribourgJourney::$PLACES)) {
-            if (isset(FribourgJourney::$COLORS[$obj->number])) {
-                return FribourgJourney::$COLORS[$obj->number];
-            }
-        }
-        else if (in_array($dest_piece, BielJourney::$PLACES)) {
-            if (isset(BielJourney::$COLORS[$obj->number])) {
-                return BielJourney::$COLORS[$obj->number];
-            }
-        }
-        else if (in_array($dest_piece, BaselJourney::$PLACES)) {
-            if (isset(BaselJourney::$COLORS[$obj->number])) {
-                return BaselJourney::$COLORS[$obj->number];
+
+        foreach (Journey::$JOURNEYS as $name => $values) {
+            if (in_array($dest_piece, $values['places'])) {
+                if (isset($values['colors'][$obj->number])) {
+                    return $values['colors'][$obj->number];
+                }
             }
         }
         return null;
