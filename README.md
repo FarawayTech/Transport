@@ -24,7 +24,6 @@ $ git push heroku heroku:master
 ```
 $ git clone git://github.com/OpendataCH/Transport.git transport
 $ cd transport
-$ curl -s http://getcomposer.org/installer | php
 $ php composer.phar install
 ```
 
