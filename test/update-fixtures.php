@@ -33,28 +33,10 @@ function downloadJson($url, $file) {
     // send request
     $response = $browser->get($url);
 
-    // fix broken JSON
     $content = $response->getContent();
-    $content = preg_replace('/(\w+) ?:/i', '"\1":', $content);
 
     $filename = __DIR__ . '/fixtures/' . $file;
     file_put_contents($filename, $content);
-
-    if (function_exists('exec')) {
-        $formatedFilename = $filename . '.formated';
-        exec('python -mjson.tool ' . escapeshellarg($filename) . ' 2>/dev/null > ' . escapeshellarg($formatedFilename));
-
-        if (!file_exists($formatedFilename)) {
-            return;
-        }
-        if (filesize($formatedFilename) !== 0) {
-            unlink($filename);
-            rename($formatedFilename, $filename);
-        } else {
-            // Do cleanup on failure
-            unlink($formatedFilename);
-        }
-    }
 }
 
 // Location
@@ -77,3 +59,8 @@ download($query, 'stationboard.xml');
 $nearBy = new NearbyQuery('47.002347', '8.379934', 2);
 $url = Transport\API::URL_QUERY . '?' . http_build_query($nearBy->toArray());
 downloadJson($url, 'location.json');
+
+// Nyon, rte de l'Etraz
+$nearBy = new NearbyQuery('46.388653', '6.238729', 1);
+$url = Transport\API::URL_QUERY . '?' . http_build_query($nearBy->toArray());
+downloadJson($url, 'location-nyon.json');
