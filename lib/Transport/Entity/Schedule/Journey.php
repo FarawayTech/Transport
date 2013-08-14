@@ -8,7 +8,8 @@ class Journey
     public static $JOURNEYS =
     array('BaselJourney' => array('places' => array('Basel', 'Pratteln', 'Rodersdorf', 'Dornach-Arlesheim', 'Ettingen',
                                                     'Flüh', 'Basel Wiesenplatz', 'Birsfelden', 'Allschwil', 'Riehen',
-                                                    'Hüslimatt', 'Aesch', 'St-Louis Grenze', 'Basel Messeplatz'),
+                                                    'Hüslimatt', 'Aesch', 'Aesch BL Dorf', 'St-Louis Grenze',
+                                                    'Binningen', 'Basel Messeplatz'),
                                   'colors' => array('1' => 'ff804b2f', '2' => 'ffa8834a', '3' => 'ff3c4796',
                                                     '6' => 'ff006ab0', '8' => 'ffeb6ea2', '10' => 'ffffca0a',
                                                     '11' => 'ffe30910', '14' => 'ffeb7b05', '15' => 'ff00963a',
@@ -22,7 +23,7 @@ class Journey
                                      'colors' => array('1' => 'ff53B401', '2' => 'ffD83B38', '3' => 'ffFFD012',
                                                        '4' => 'ffF08B32', '5' => 'ff2F7CE3', '6' => 'ff3F2072',
                                                        '7' => 'ff833816')));
-    const CAT_REGEX = "/^(BUS|FUN|BAT|BAV|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
+    const CAT_REGEX = "/^(BUS|EXT|FUN|BAT|BAV|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
 
     /**
      * @var string
