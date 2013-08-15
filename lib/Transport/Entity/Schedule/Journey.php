@@ -9,7 +9,7 @@ class Journey
     array('BaselJourney' => array('places' => array('Basel', 'Pratteln', 'Rodersdorf', 'Dornach-Arlesheim', 'Ettingen',
                                                     'Flüh', 'Basel Wiesenplatz', 'Birsfelden', 'Allschwil', 'Riehen',
                                                     'Hüslimatt', 'Aesch', 'Aesch BL Dorf', 'St-Louis Grenze',
-                                                    'Binningen', 'Basel Messeplatz'),
+                                                    'Binningen', 'Basel Messeplatz', 'Basel Bankverein', 'Oberwil BL'),
                                   'colors' => array('1' => 'ff804b2f', '2' => 'ffa8834a', '3' => 'ff3c4796',
                                                     '6' => 'ff006ab0', '8' => 'ffeb6ea2', '10' => 'ffffca0a',
                                                     '11' => 'ffe30910', '14' => 'ffeb7b05', '15' => 'ff00963a',
@@ -22,7 +22,15 @@ class Journey
                                                        'Givisiez'),
                                      'colors' => array('1' => 'ff53B401', '2' => 'ffD83B38', '3' => 'ffFFD012',
                                                        '4' => 'ffF08B32', '5' => 'ff2F7CE3', '6' => 'ff3F2072',
-                                                       '7' => 'ff833816')));
+                                                       '7' => 'ff833816')),
+          'ZurichJourney' => array('places' => array('Zürich', 'Zürich Rehalp', 'Zürich Flughafen', 'Zürich Altstetten',
+                                                     'Zürich Hegibachplatz', 'Schlieren', 'Zürich Tiefenbrunnen',
+                                                     'Stettbach', 'Zürich Enge'),
+                                     'colors' => array('2' => 'ffEE1D23', '3' => 'ff00AB4D', '4' => 'ff48479D',
+                                                       '5' => 'ff946237', '6' => 'ffD99E4E', '7' => 'ff231F20',
+                                                       '8' => 'ffA6CE39', '9' => 'ff48479D', '10' => 'ffED3896',
+                                                       '11' => 'ff00AB4D', '12' => 'ff78D0E2', '13' => 'ffFED304',
+                                                       '14' => 'ff00AEEF', '15' => 'ffEE1D23', '17' => 'ffA1276F')));
     const CAT_REGEX = "/^(BUS|EXT|FUN|BAT|BAV|R|IR|IC|ICN|ICE|RE|ECN|S\\d{1,2})$/";
 
     /**
