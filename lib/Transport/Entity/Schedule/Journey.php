@@ -25,7 +25,7 @@ class Journey
                                                        '7' => 'ff833816')),
           'ZurichJourney' => array('places' => array('Zürich', 'Zürich Rehalp', 'Zürich Flughafen', 'Zürich Altstetten',
                                                      'Zürich Hegibachplatz', 'Schlieren', 'Zürich Tiefenbrunnen',
-                                                     'Stettbach', 'Zürich Enge'),
+                                                     'Stettbach', 'Zürich Enge', 'Zürich Oerlikon'),
                                      'colors' => array('2' => 'ffEE1D23', '3' => 'ff00AB4D', '4' => 'ff48479D',
                                                        '5' => 'ff946237', '6' => 'ffD99E4E', '7' => 'ff231F20',
                                                        '8' => 'ffA6CE39', '9' => 'ff48479D', '10' => 'ffED3896',
