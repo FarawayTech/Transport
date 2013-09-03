@@ -19,7 +19,7 @@ class Journey
                                                    '5' => 'ff116630', '6' => 'ff9fc841', '7' => 'ffdf4891',
                                                    '8' => 'ff7c4391', '11' => 'ff9f2e36')),
           'FribourgJourney' => array('places' => array('Fribourg', 'Marly', 'Villars-sur-Glâne', 'Granges-Paccot',
-                                                       'Givisiez'),
+                                                       'Givisiez', 'Rosé', 'Chésopelloz'),
                                      'colors' => array('1' => 'ff53B401', '2' => 'ffD83B38', '3' => 'ffFFD012',
                                                        '4' => 'ffF08B32', '5' => 'ff2F7CE3', '6' => 'ff3F2072',
                                                        '7' => 'ff833816')),
