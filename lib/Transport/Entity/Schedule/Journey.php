@@ -42,7 +42,7 @@ class Journey
                                                        '8' => 'ffA6CE39', '9' => 'ff48479D', '10' => 'ffED3896',
                                                        '11' => 'ff00AB4D', '12' => 'ff78D0E2', '13' => 'ffFED304',
                                                        '14' => 'ff00AEEF', '15' => 'ffEE1D23', '17' => 'ffA1276F')));
-    const CAT_REGEX = "/^(BUS|EXT|FUN|BAT|BAV|LB|R|IR|IC|ICN|ICE|RE|ECN|SN\\d{1,2}|S\\d{1,2})$/";
+    const CAT_REGEX = "/^(BUS|EXT|FUN|BAT|BAV|LB|R|IR|IC|ICN|ICE|RE|ECN|CNL|TGV|SN\\d{1,2}|S\\d{1,2})$/";
 
     /**
      * @var string
