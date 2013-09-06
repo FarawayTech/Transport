@@ -19,13 +19,13 @@ class Journey
                                                    '5' => 'ff116630', '6' => 'ff9fc841', '7' => 'ffdf4891',
                                                    '8' => 'ff7c4391', '11' => 'ff9f2e36')),
           'FribourgJourney' => array('places' => array('Fribourg', 'Marly', 'Villars-sur-Glâne', 'Granges-Paccot',
-                                                       'Givisiez'),
+                                                       'Givisiez', 'Rosé', 'Chésopelloz'),
                                      'colors' => array('1' => 'ff53B401', '2' => 'ffD83B38', '3' => 'ffFFD012',
                                                        '4' => 'ffF08B32', '5' => 'ff2F7CE3', '6' => 'ff3F2072',
                                                        '7' => 'ff833816')),
           'GenevaJourney' => array('places' => array('Genève', 'Carouge GE', 'Veyrier', 'Bernex', 'Lancy',
-                                                     'Meyrin', 'Chêne-bourg', 'Thônex', 'Grand-Saconnex', 'Vernier',
-                                                     'Onex', 'Veigy', 'Neydens'),
+                                                     'Meyrin', 'Chêne-Bourg', 'Thônex', 'Grand-Saconnex', 'Vernier',
+                                                     'Onex', 'Veigy', 'Neydens', 'Grand-Lancy'),
                                    'colors' => array('1' => 'ff393185', '2' => 'ffd2d64d', '3' => 'ffa34d90',
                                                      '4' => 'ffd10026', '5' => 'ff5ec5eb', '6' => 'ff0098d4',
                                                      '7' => 'ff009c2f', '8' => 'ff804826', '9' => 'ffd10026',
@@ -42,7 +42,7 @@ class Journey
                                                        '8' => 'ffA6CE39', '9' => 'ff48479D', '10' => 'ffED3896',
                                                        '11' => 'ff00AB4D', '12' => 'ff78D0E2', '13' => 'ffFED304',
                                                        '14' => 'ff00AEEF', '15' => 'ffEE1D23', '17' => 'ffA1276F')));
-    const CAT_REGEX = "/^(BUS|EXT|FUN|BAT|BAV|LB|R|IR|IC|ICN|ICE|RE|ECN|SN\\d{1,2}|S\\d{1,2})$/";
+    const CAT_REGEX = "/^(BUS|EXT|FUN|BAT|BAV|LB|R|IR|IC|ICN|ICE|RE|ECN|CNL|TGV|SN\\d{1,2}|S\\d{1,2})$/";
 
     /**
      * @var string
