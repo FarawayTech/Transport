@@ -178,11 +178,10 @@ class API
         if ($result->STBRes->JourneyList->STBJourney) {
             foreach ($result->STBRes->JourneyList->STBJourney as $journey) {
                 $curTime = strtotime((string) $journey->MainStop->BasicStop->Dep->Time);
-
-//                $prognosis = strtotime((string) $journey->MainStop->BasicStop->StopPrognosis->Dep->Time);
-//                if ($prognosis)
-//                    $curTime = $prognosis;
-                if ($prevTime > $curTime) { // we passed midnight
+                $prognosis = strtotime((string) $journey->MainStop->BasicStop->StopPrognosis->Dep->Time);
+                if (!$prognosis)
+                    $prognosis = $curTime;
+                if ($prevTime > $curTime && $prevTime > $prognosis) { // we passed midnight
                     $date->add(new \DateInterval('P1D'));
                 }
                 $journeys[] = Entity\Schedule\StationBoardJourney::createFromXml($journey, $date, null);
