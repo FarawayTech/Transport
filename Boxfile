@@ -6,6 +6,7 @@ web1:
   php_extensions:
     - curl
     - xhprof
+    - zip # for composer
   after_build:
     - "mkdir -p /var/www/var/logs"
     - "mkdir -p /var/www/var/xhprof"
