@@ -54,6 +54,10 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 ));
 $app->before(function (Request $request) use ($app) {
     $app['monolog']->addInfo('- ' . $request->getClientIp() . ' ' . $request->headers->get('referer') . ' ' . $request->server->get('HTTP_USER_AGENT'));
+    // if hosted behind a reverse proxy
+    if ($app['proxy']) {
+        Request::setTrustedProxies(array($request->server->get('REMOTE_ADDR')));
+    }
 });
 
 // XHProf
@@ -61,10 +65,6 @@ if ($app['xhprof']) {
     xhprof_enable();
 }
 
-// if hosted behind a reverse proxy
-if ($app['proxy']) {
-    Request::setTrustedProxies(array($request->server->get('REMOTE_ADDR')));
-}
 
 // create Transport API
 $app['api'] = new Transport\API(new Buzz\Browser($app['buzz.client']));
