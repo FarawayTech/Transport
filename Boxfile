@@ -9,6 +9,8 @@ web1:
     - zip # for composer
   after_build:
     - "mkdir -p /var/www/var/logs"
+    - "chmod 755 /var/www/var/logs"
+    - "ls -la /var/www/var/logs"
     - "mkdir -p /var/www/var/xhprof"
     - "mv /var/www/pagodabox.php /var/www/config.php"
     - "curl -s http://getcomposer.org/installer | php"
