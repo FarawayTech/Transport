@@ -1,8 +1,8 @@
-web1: 
+web1:
   name: transport
-  document_root: web 
+  document_root: web
   shared_writable_dirs:
-    - var
+    - /var
   php_extensions:
     - curl
     - xhprof
