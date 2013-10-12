@@ -1,6 +1,7 @@
 web1:
   name: transport
   document_root: web
+  php_error_reporting: 30719 # Equivalent to E_ALL
   shared_writable_dirs:
     - /var
   php_extensions:
