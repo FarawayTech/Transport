@@ -63,7 +63,7 @@ if ($app['xhprof']) {
 
 // if hosted behind a reverse proxy
 if ($app['proxy']) {
-    Request::trustProxyData();
+    Request::setTrustedProxies(array($request->server->get('REMOTE_ADDR')));
 }
 
 // create Transport API
