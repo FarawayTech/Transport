@@ -3,14 +3,13 @@ web1:
   document_root: web
   shared_writable_dirs:
     - var
+    - var/logs
   php_extensions:
     - curl
     - xhprof
     - zip # for composer
   after_build:
     - "mkdir -p /var/www/var/logs"
-    - "chmod 775 /var/www/var/logs"
-    - "ls -la /var/www/var/logs"
     - "mkdir -p /var/www/var/xhprof"
     - "mv /var/www/pagodabox.php /var/www/config.php"
     - "curl -s http://getcomposer.org/installer | php"
