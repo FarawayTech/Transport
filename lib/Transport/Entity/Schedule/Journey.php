@@ -42,9 +42,10 @@ class Journey
                                                        '8' => 'ffA6CE39', '9' => 'ff48479D', '10' => 'ffED3896',
                                                        '11' => 'ff00AB4D', '12' => 'ff78D0E2', '13' => 'ffFED304',
                                                        '14' => 'ff00AEEF', '15' => 'ffEE1D23', '17' => 'ffA1276F')));
-    const CAT_REGEX = "/^(SN\\d{1,2}|S\\d{1,2})$/";
-    static $CAT_ARRAY = array('BUS', 'EXT', 'FUN', 'BAT', 'BAV', 'LB', 'R', 'IR', 'IC', 'ICN','ICE', 'RE', 'ECN', 'EC',
-                              'CNL','TGV');
+//    const CAT_REGEX = "/^(SN\\d{1,2}|S\\d{1,2})$/";
+//    static $CAT_ARRAY = array('BUS', 'EXT', 'FUN', 'BAT', 'BAV', 'LB', 'R', 'IR', 'IC', 'ICN','ICE', 'RE', 'ECN', 'EC',
+//                              'CNL','TGV', 'TLK');
+    static $CAT_EXCLUDE = array('NFO', 'NFB');
 
     /**
      * @var string
@@ -114,7 +115,7 @@ class Journey
     static public function resolveNumber(Journey $obj)
     {
         $resolvedNumber = $obj->number;
-        if (is_null($obj->color) && (preg_match(self::CAT_REGEX, $obj->category)) || in_array($obj->category, self::$CAT_ARRAY))
+        if (is_null($obj->color) && !in_array($obj->category, self::$CAT_EXCLUDE))
         {
             $resolvedNumber = $obj->category;
         }
