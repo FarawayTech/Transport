@@ -42,7 +42,9 @@ class Journey
                                                        '8' => 'ffA6CE39', '9' => 'ff48479D', '10' => 'ffED3896',
                                                        '11' => 'ff00AB4D', '12' => 'ff78D0E2', '13' => 'ffFED304',
                                                        '14' => 'ff00AEEF', '15' => 'ffEE1D23', '17' => 'ffA1276F')));
-    const CAT_REGEX = "/^([A-Z]+|SN\\d{1,2}|S\\d{1,2})$/";
+    const CAT_REGEX = "/^(SN\\d{1,2}|S\\d{1,2})$/";
+    static $CAT_ARRAY = array('BUS', 'EXT', 'FUN', 'BAT', 'BAV', 'LB', 'R', 'IR', 'IC', 'ICN','ICE', 'RE', 'ECN', 'EC',
+                              'CNL','TGV');
 
     /**
      * @var string
@@ -99,7 +101,7 @@ class Journey
         $dest_pieces = explode(',', $obj->to);
         $dest_piece = $dest_pieces[0];
 
-        foreach (Journey::$JOURNEYS as $name => $values) {
+        foreach (self::$JOURNEYS as $name => $values) {
             if (in_array($dest_piece, $values['places'])) {
                 if (isset($values['colors'][$obj->number])) {
                     return $values['colors'][$obj->number];
@@ -112,7 +114,7 @@ class Journey
     static public function resolveNumber(Journey $obj)
     {
         $resolvedNumber = $obj->number;
-        if (is_null($obj->color) && preg_match(self::CAT_REGEX, $obj->category))
+        if (is_null($obj->color) && (preg_match(self::CAT_REGEX, $obj->category)) || in_array($obj->category, self::$CAT_ARRAY))
         {
             $resolvedNumber = $obj->category;
         }
