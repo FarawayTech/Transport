@@ -35,7 +35,8 @@ class Journey
                                                      '23' => 'ffa34d90', '25' => 'ff9e6229', '27' => 'ff5ec5eb',
                                                      '28' => 'fffcd700')),
           'LausanneJourney' => array('places' => array('Lausanne', 'Prilly', 'Lutry', 'Pully', 'Paudex',
-                                                       'Crissier', 'Epalignes', 'Renens VD'),
+                                                       'Crissier', 'Epalignes', 'Renens VD', 'St-Sulpice VD',
+                                                       'Ecublens VD', 'Echichens'),
                                      'colors' => array('1' => 'ffeb1c20', '2' => 'fffcec00', '4' => 'ff00a34c',
                                                        '6' => 'ff00aeed', '7' => 'ff009c2f', '8' => 'ff8d52a1',
                                                        '9' => 'ffeb0273', '12' => 'ff8c9c7b', '13' => 'fffab514',
@@ -60,7 +61,7 @@ class Journey
 //    const CAT_REGEX = "/^(SN\\d{1,2}|S\\d{1,2})$/";
 //    static $CAT_ARRAY = array('BUS', 'EXT', 'FUN', 'BAT', 'BAV', 'LB', 'R', 'IR', 'IC', 'ICN','ICE', 'RE', 'ECN', 'EC',
 //                              'CNL','TGV', 'TLK');
-    static $CAT_EXCLUDE = array('NFO', 'NFB', 'NFT', 'M');
+    static $CAT_EXCLUDE = array('NFO', 'NFB', 'NFT', 'M', 'TRO', 'T');
 
     /**
      * @var string
