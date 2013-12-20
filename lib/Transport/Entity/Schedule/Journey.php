@@ -60,7 +60,7 @@ class Journey
 //    const CAT_REGEX = "/^(SN\\d{1,2}|S\\d{1,2})$/";
 //    static $CAT_ARRAY = array('BUS', 'EXT', 'FUN', 'BAT', 'BAV', 'LB', 'R', 'IR', 'IC', 'ICN','ICE', 'RE', 'ECN', 'EC',
 //                              'CNL','TGV', 'TLK');
-    static $CAT_EXCLUDE = array('NFO', 'NFB', 'NFT', 'M');
+    static $CAT_EXCLUDE = array('NFO', 'NFB', 'NFT', 'M', 'TRO', 'T');
 
     /**
      * @var string
