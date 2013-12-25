@@ -17,6 +17,7 @@ $ git merge master
 $ rm -rf vendor
 $ php composer.phar install --prefer-dist
 $ git push heroku heroku:master
+$ git push pagoda master
 ```
 
 ## Installation
