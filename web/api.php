@@ -231,6 +231,11 @@ $app->get('/v1/stationboard', function(Request $request) use ($app) {
 });
 
 
+// Training data
+$app->get('/v1/training', function(Request $request) use ($app) {
+    return new Response("OK");
+});
+
 // run
 if ($app['http_cache']) {
     $app['http_cache']->run();
