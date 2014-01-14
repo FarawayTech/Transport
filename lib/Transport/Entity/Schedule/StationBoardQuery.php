@@ -31,8 +31,6 @@ class StationBoardQuery extends Query
         $this->date = $date;
     }
 
-    //<JourneyReq date="20130902" time="22:42" type="DEP" externalId="008577784#95">
-    //<JHandle tNr="169624" puic="095" cycle="11"></JHandle></JourneyReq>
     public function toXml()
     {
         $request = $this->createRequest('STBReq');
