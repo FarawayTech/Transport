@@ -44,6 +44,16 @@ class ConnectionQueryParser
             $query->limit = $limit;
         }
 
+        $backward = $request->get('backward');
+        if ($backward) {
+            $query->backward = $backward;
+        }
+
+        $forward = $request->get('forward');
+        if ($forward) {
+            $query->forward = $forward;
+        }
+
         $page = $request->get('page');
         if ($page) {
             $query->page = $page;
@@ -84,7 +94,13 @@ class ConnectionQueryParser
         if ($query->limit > 6) {
             $errors[] = 'Maximal value of argument `limit` is 6.';
         }
-        if ($query->page > 10) {
+        if ($query->backward > 6) {
+            $errors[] = 'Maximal value of argument `backward` is 6.';
+        }
+        if ($query->forward > 6) {
+            $errors[] = 'Maximal value of argument `backward` is 6.';
+        }
+        if ($query->page > 20) {
             $errors[] = 'Maximal value of argument `page` is 10.';
         }
         if (count($query->viaLocations) > 5) {

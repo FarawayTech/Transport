@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Transport\Entity\Schedule;
 
@@ -17,12 +17,16 @@ class ConnectionQuery extends Query
     public $date;
 
     public $time;
-    
+
     public $isArrivalTime = false;
 
     public $transportations = array('all');
 
     public $limit = 4;
+
+    public $backward = 0;
+
+    public $forward = 0;
 
     public $page = 0;
 
@@ -52,12 +56,17 @@ class ConnectionQuery extends Query
 
     public function toXml()
     {
-        if ($this->isArrivalTime == false) {
-            $forwardCount = $this->limit;
-            $backwardCount = 0;
+        if ($this->backward == 0 && $this->forward == 0){
+            if ($this->isArrivalTime == false) {
+                $forwardCount = $this->limit;
+                $backwardCount = 0;
+            } else {
+                $forwardCount = 0;
+                $backwardCount = $this->limit;
+            }
         } else {
-            $forwardCount = 0;
-            $backwardCount = $this->limit;
+            $forwardCount = $this->forward;
+            $backwardCount = $this->backward;
         }
 
         $transportationsBinary = Transportations::reduceTransportations($this->transportations);
@@ -73,7 +82,7 @@ class ConnectionQuery extends Query
         $prod['prod'] = $transportationsBinary;
 
         if ($this->direct) {
-            $prod['direct'] = 1;    
+            $prod['direct'] = 1;
         }
 
         if ($this->sleeper) {
@@ -81,11 +90,11 @@ class ConnectionQuery extends Query
         }
 
         if ($this->couchette) {
-            $prod['couchette'] = 1;    
+            $prod['couchette'] = 1;
         }
 
         if ($this->bike) {
-            $prod['bike'] = 1;    
+            $prod['bike'] = 1;
         }
 
         $dest = $con->addChild('Dest');
