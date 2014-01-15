@@ -9,6 +9,7 @@ use Transport\Entity\Location\LocationQuery;
 use Transport\Entity\Location\NearbyQuery;
 use Transport\Entity\Schedule\ConnectionQuery;
 use Transport\Entity\Schedule\ConnectionPageQuery;
+use Transport\Entity\Schedule\RouteQuery;
 use Transport\Entity\Schedule\StationBoardQuery;
 
 class API
@@ -190,5 +191,19 @@ class API
         }
 
         return $journeys;
+    }
+
+
+    public function getRoute(RouteQuery $query)
+    {
+        // send request
+        $response = $this->sendQuery($query);
+
+        // parse result
+        $result = simplexml_load_string($response->getContent());
+
+        $date = $query->date;
+        $stops[] = Entity\Schedule\Route::createFromXml($result, $date, null);
+        return $stops;
     }
 }
