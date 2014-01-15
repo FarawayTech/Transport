@@ -115,6 +115,12 @@ class Journey
      */
     public $resolvedNumber;
 
+    /**
+     * @var string, for technical use when we want to request the route
+     */
+    public $jHandle;
+
+
     static public function resolveColor(Journey $obj)
     {
         $dest_pieces = explode(',', $obj->to);
@@ -145,6 +151,8 @@ class Journey
         if (!$obj) {
             $obj = new Journey();
         }
+
+        $obj->jHandle = implode(";",current($xml->JHandle->attributes()));
 
         // TODO: get attributes
         if ($xml->JourneyAttributeList) {

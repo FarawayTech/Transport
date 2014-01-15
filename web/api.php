@@ -14,6 +14,7 @@ use Transport\Entity\Location\NearbyQuery;
 use Transport\Web\ConnectionQueryParser;
 use Transport\Web\LocationQueryParser;
 use Transport\Entity\Schedule\StationBoardQuery;
+use Transport\Entity\Schedule\RouteQuery;
 use Transport\Normalizer\FieldsNormalizer;
 
 date_default_timezone_set('Europe/Zurich');
@@ -227,6 +228,38 @@ $app->get('/v1/stationboard', function(Request $request) use ($app) {
     $result = array('station' => $station, 'stationboard' => $stationboard);
 
     $json = $app['serializer']->serialize((object) $result, 'json');
+    return new Response($json, 200, array('Content-Type' => 'application/json'));
+});
+
+// route request
+$app->get('/v1/route', function (Request $request) use ($app) {
+    $route = array();
+
+    $jhandle = $request->get('jhandle');
+    $date = $request->get('date');
+    if (!$date) {
+        $date = $request->get('datetime');
+    }
+    if ($date) {
+        $date = new DateTime($date, new DateTimeZone('Europe/Zurich'));
+    }
+
+    $station = $request->get('station') ? : $request->get('id');
+
+    $query = new LocationQuery($station);
+    $stations = $app['api']->findLocations($query);
+    $station = reset($stations);
+
+    if ($station instanceof Station) {
+        $app['stats']->station($station);
+
+        $query = new RouteQuery($station, $jhandle, $date);
+        $route = $app['api']->getRoute($query);
+    }
+
+    $result = array('station' => $station, 'route' => $route);
+
+    $json = $app['serializer']->serialize((object)$result, 'json');
     return new Response($json, 200, array('Content-Type' => 'application/json'));
 });
 
