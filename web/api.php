@@ -257,7 +257,7 @@ $app->get('/v1/route', function (Request $request) use ($app) {
         $route = $app['api']->getRoute($query);
     }
 
-    $result = array('station' => $station, 'route' => $route);
+    $result = array('station' => $station, 'passList' => $route->passList);
 
     $json = $app['serializer']->serialize((object)$result, 'json');
     return new Response($json, 200, array('Content-Type' => 'application/json'));
