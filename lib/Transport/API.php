@@ -203,7 +203,7 @@ class API
         $result = simplexml_load_string($response->getContent());
 
         $date = $query->date;
-        $stops[] = Entity\Schedule\Route::createFromXml($result, $date, null);
-        return $stops;
+        $route = Entity\Schedule\Route::createFromXml($result, $date, null);
+        return $route;
     }
 }

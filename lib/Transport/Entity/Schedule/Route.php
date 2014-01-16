@@ -17,11 +17,12 @@ class Route
         }
 
         $journey = $xml->JourneyRes->Journey;
-        foreach ($journey->PassList->children() as $stop) {
-            $stop = Stop::createFromXml($stop, $date, null);
-            $obj->passList[] = $stop;
+        if ($journey != null) {
+            foreach ($journey->PassList->children() as $stop) {
+                $stop = Stop::createFromXml($stop, $date, null);
+                $obj->passList[] = $stop;
+            }
         }
-
         return $obj;
     }
 }
