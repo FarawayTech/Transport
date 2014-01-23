@@ -19,8 +19,10 @@ class Route
         $journey = $xml->JourneyRes->Journey;
         if ($journey != null) {
             foreach ($journey->PassList->children() as $stop) {
-                $stop = Stop::createFromXml($stop, $date, null);
-                $obj->passList[] = $stop;
+                try {
+                    $stop = Stop::createFromXml($stop, $date, null);
+                    $obj->passList[] = $stop;
+                } catch (\Exception $e) { }
             }
         }
         return $obj;
