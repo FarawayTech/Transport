@@ -29,7 +29,7 @@ class Journey
           'GenevaJourney' => array('places' => array('Genève', 'Carouge GE', 'Veyrier', 'Bernex', 'Lancy',
                                                      'Meyrin', 'Chêne-Bourg', 'Thônex', 'Grand-Saconnex', 'Vernier',
                                                      'Onex', 'Veigy', 'Neydens', 'Grand-Lancy', 'Jussy', 'Avusy',
-                                                     'Confignon', 'Plan-les-Ouates', 'Satigny', 'Ferney'),
+                                                     'Confignon', 'Plan-les-Ouates', 'Satigny', 'Ferney', 'La Plaine'),
                                    'colors' => array('1' => 'ff663399', '10' => 'ff006633', '11' => 'ff993399',
                                                      '12' => 'ffFF9900', '14' => 'ff663399', '15' => 'ff993333',
                                                      '18' => 'ffCC3399', '19' => 'ffFFCC00', '2' => 'ffCCCC33',
