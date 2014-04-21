@@ -61,14 +61,18 @@ $app->before(function (Request $request) use ($app) {
     }
 });
 
+$app->before(function (Request $request) use ($app) {
+    // get correct provider
+    $provider = \Transport\Providers\Provider::getProvider($request->get('country'), $request->get('area'));
+
+    // create Transport API
+    $app['api'] = new Transport\API($provider, new Buzz\Browser($app['buzz.client']));
+});
+
 // XHProf
 if ($app['xhprof']) {
     xhprof_enable();
 }
-
-
-// create Transport API
-$app['api'] = new Transport\API(new Buzz\Browser($app['buzz.client']));
 
 // allow cross-domain requests, enable cache
 $app->after(function (Request $request, Response $response) {

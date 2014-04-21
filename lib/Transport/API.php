@@ -3,7 +3,7 @@
 namespace Transport;
 
 use Buzz\Browser;
-use Transport\Providers;
+use Transport\Providers\Provider;
 use Transport\Entity\Query;
 use Transport\Entity\Location\LocationQuery;
 use Transport\Entity\Location\NearbyQuery;

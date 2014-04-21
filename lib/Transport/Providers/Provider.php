@@ -15,8 +15,15 @@ class Provider
     const SEARCH_MODE_NORMAL = 'N';
     const SEARCH_MODE_ECONOMIC = 'P';
 
-    public static function getProvider()
+    public static function getProvider($country, $area)
     {
-        return new SBB();
+        $provider = new SBB();
+        if ($country == 'CH'){
+            if ($area == "Zurich")
+                $provider = new ZVV();
+        }
+        else if ($country == "DE")
+            $provider = new DB();
+        return $provider;
     }
 }
