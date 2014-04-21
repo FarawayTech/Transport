@@ -50,6 +50,13 @@ class Station extends Location
         return $obj;
     }
 
+    public static function createFromStXml(\SimpleXMLElement $xml)
+    {
+        $obj = new Station((string)$xml['evaId']);
+        parent::createFromXml($xml, $obj);
+        return $obj;
+    }
+
     /**
      * {@inheritDoc}
      */

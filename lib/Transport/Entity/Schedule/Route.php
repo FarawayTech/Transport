@@ -16,6 +16,15 @@ class Route
             $obj = new Route();
         }
 
+        if ($xml->getName() == 'StJourney')
+            self::createFromStXML($xml, $date, $obj);
+        else
+            self::createFromExtXML($xml, $date, $obj);
+        return $obj;
+    }
+
+    private static function createFromExtXML(\SimpleXMLElement $xml, \DateTime $date, Route $obj)
+    {
         $journey = $xml->JourneyRes->Journey;
         if ($journey != null) {
             foreach ($journey->PassList->children() as $stop) {
@@ -25,6 +34,15 @@ class Route
                 } catch (\Exception $e) { }
             }
         }
-        return $obj;
+    }
+
+    private static function createFromStXML(\SimpleXMLElement $xml, \DateTime $date, Route $obj)
+    {
+        foreach ($xml->children() as $stop) {
+            try {
+                $stop = Stop::createFromStXml($stop, $date, null);
+                $obj->passList[] = $stop;
+            } catch (\Exception $e) { }
+        }
     }
 }
