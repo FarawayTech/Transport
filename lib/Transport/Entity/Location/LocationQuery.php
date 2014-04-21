@@ -41,8 +41,29 @@ class LocationQuery extends Query
         $this->type = $type;
     }
 
-    public function toXml() {
+    private function toMLXml() {
+        $request = $this->createRequest();
 
+        foreach ($this->query as $key => $value) {
+
+            $queryArray = array($key => $value);
+
+            foreach ($queryArray as $k => $v) {
+                $local = $request->addChild('MLcReq');
+                $location = $local->addChild('MLc');
+                $location['n'] = $v . '?';
+
+                if (!isset(self::$locationTypes[$this->type])) {
+                    $this->type = 'station'; // default type
+                }
+                $location['t'] = self::$locationTypes[$this->type];
+            }
+        }
+
+        return $request->asXML();
+    }
+
+    private function toExtXML() {
         $request = $this->createRequest();
 
         foreach ($this->query as $key => $value) {
@@ -73,6 +94,14 @@ class LocationQuery extends Query
         }
 
         return $request->asXML();
+    }
+
+    public function toXml() {
+
+        //if ($this->supportsExtXML)
+        //    return $this->toMLXml();
+        //else
+        return $this->toExtXML();
     }
 
     /**
