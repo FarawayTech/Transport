@@ -2,11 +2,16 @@
 
 namespace Transport\Entity;
 
-use Transport\Entity\Location\Location;
+use Transport\Providers\Provider;
 
 abstract class Query
 {
     public $lang = 'EN';
+    private $provider;
+
+    public function addProvider(Provider $provider) {
+        $this->provider = $provider;
+    }
 
     /**
      * @return  \SimpleXMLElement
@@ -15,10 +20,17 @@ abstract class Query
     {
         $request = new \SimpleXMLElement('<?xml version="1.0" encoding="iso-8859-1"?><ReqC />');
         $request['lang'] = $this->lang;
-        $request['prod'] = \Transport\API::SBB_PROD;
-        $request['ver'] = \Transport\API::SBB_VERSION;
-        $request['accessId'] = \Transport\API::SBB_ACCESS_ID;
+
+        $request['prod'] = $this->provider->REQ_PROD;
+        $request['ver'] = $this->provider->API_VERSION;
+        $request['accessId'] = $this->provider->ACCESS_ID;
 
         return $request;
+    }
+
+    public function toXml() {
+
+        $request = $this->createRequest();
+        return $request->asXML();
     }
 }

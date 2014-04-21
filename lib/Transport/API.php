@@ -3,7 +3,7 @@
 namespace Transport;
 
 use Buzz\Browser;
-use Transport\Entity\Location\Location;
+use Transport\Providers;
 use Transport\Entity\Query;
 use Transport\Entity\Location\LocationQuery;
 use Transport\Entity\Location\NearbyQuery;
@@ -14,42 +14,40 @@ use Transport\Entity\Schedule\StationBoardQuery;
 
 class API
 {
-    const URL = 'http://fahrplan.sbb.ch/bin/extxml.exe/';
-    const URL_QUERY = 'http://fahrplan.sbb.ch/bin/query.exe/dny';
-
-    const SBB_PROD = 'iPhone3.1';
-    const SBB_VERSION = '2.3';
-    const SBB_ACCESS_ID = 'YJpyuPISerpXNNRTo50fNMP0yVu7L6IMuOaBgS0Xz89l3f6I3WhAjnto4kS9oz1';
-
-    const SEARCH_MODE_NORMAL = 'N';
-    const SEARCH_MODE_ECONOMIC = 'P';
-
     /**
      * @var Buzz\Browser
      */
     protected $browser;
 
     /**
+     * @var Providers\Provider
+     */
+    protected $provider;
+
+    /**
      * @var string
      */
     protected $lang;
 
-    public function __construct(Browser $browser = null, $lang = 'EN')
+    public function __construct(Provider $provider, Browser $browser = null, $lang = 'EN')
     {
         $this->browser = $browser ?: new Browser();
         $this->lang = $lang;
+        $this->provider = $provider;
     }
 
     /**
      * @return Buzz\Message\Response
      */
-    public function sendQuery(Query $query, $url = self::URL)
+    public function sendQuery(Query $query)
     {
-
+        $url = $this->provider->URL;
         $headers = array();
         $headers[] = 'User-Agent: SBBMobile/4.8 CFNetwork/609.1.4 Darwin/13.0.0';
         $headers[] = 'Accept: application/xml';
         $headers[] = 'Content-Type: application/xml';
+
+        $query->addProvider($this->provider);
 
         return $this->browser->post($url, $headers, $query->toXml());
     }
@@ -129,7 +127,7 @@ class API
      */
     public function findNearbyLocations(NearbyQuery $query)
     {
-        $url = self::URL_QUERY . '?' . http_build_query($query->toArray());
+        $url = $this->provider->URL_QUERY . '?' . http_build_query($query->toArray());
 
         // send request
         $response = $this->browser->get($url);
