@@ -10,6 +10,9 @@ use Transport\Entity\Schedule\StationBoardQuery;
 
 class APITest extends \PHPUnit_Framework_TestCase
 {
+    private $api;
+    private $browser;
+
     protected function setUp()
     {
         $this->browser = $this->getMock('Buzz\\Browser', array('post', 'get'));
@@ -32,7 +35,7 @@ class APITest extends \PHPUnit_Framework_TestCase
                         'Content-Type: application/xml'
                 )),
                 $this->equalTo('<?xml version="1.0" encoding="iso-8859-1"?>
-<ReqC lang="EN" prod="iPhone3.1" ver="2.3" accessId="YJpyuPISerpXNNRTo50fNMP0yVu7L6IMuOaBgS0Xz89l3f6I3WhAjnto4kS9oz1"><LocValReq id="from" sMode="1"><ReqLoc match="Zürich" type="ALLTYPE"/></LocValReq><LocValReq id="to" sMode="1"><ReqLoc match="Bern" type="ALLTYPE"/></LocValReq></ReqC>
+<ReqC lang="EN" prod="iPhone3.1" ver="2.3" accessId="YJpyuPISerpXNNRTo50fNMP0yVu7L6IMuOaBgS0Xz89l3f6I3WhAjnto4kS9oz1"><LocValReq id="from" sMode="1"><ReqLoc match="Zï¿½rich" type="ALLTYPE"/></LocValReq><LocValReq id="to" sMode="1"><ReqLoc match="Bern" type="ALLTYPE"/></LocValReq></ReqC>
 ')
             )
             ->will($this->returnValue($response));
