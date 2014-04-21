@@ -30,7 +30,7 @@ class ConnectionQuery extends Query
 
     public $page = 0;
 
-    public $searchMode = \Transport\API::SEARCH_MODE_NORMAL;
+    public $searchMode = \Transport\Providers\Provider::SEARCH_MODE_NORMAL;
 
     public $changeCount = -1;
 

@@ -2,8 +2,8 @@
 
 namespace Transport\Providers;
 
-class ZVV extends Base
+class ZVV extends Provider
 {
-    protected  $STB_URL = 'http://online.fahrplan.zvv.ch/bin/stboard.exe/en';
-    protected  $URL_QUERY = 'http://online.fahrplan.zvv.ch/bin/query.exe/eny';
+    public $STB_URL = 'http://online.fahrplan.zvv.ch/bin/stboard.exe/en';
+    public $URL_QUERY = 'http://online.fahrplan.zvv.ch/bin/query.exe/eny';
 }
