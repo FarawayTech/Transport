@@ -95,4 +95,42 @@ class Stop
 
         return $obj;
     }
+
+    static public function createFromStXml(\SimpleXMLElement $xml, \DateTime $date, Stop $obj = null)
+    {
+        if (!$obj) {
+            $obj = new Stop();
+        }
+
+        $obj->station = Entity\Location\Station::createFromStXml($xml); // deprecated, use location instead
+        $obj->location = $obj->station;
+        $adelay = 0;
+        $ddelay = 0;
+
+        if ($xml['arrTime']) {
+            $arrDateTime = self::calculateDateTime((string) $xml['arrTime'], $date);
+            $obj->arrival = $arrDateTime->format(\DateTime::ISO8601);
+            $adelay = (int) $xml['adelay'];
+        }
+        if ($xml['depTime']) {
+            $depDateTime = self::calculateDateTime((string) $xml['depTime'], $date);
+            $obj->departure = $depDateTime->format(\DateTime::ISO8601);
+            $ddelay = (int) $xml['ddelay'];
+        }
+        $obj->platform = trim((string) $xml['platform']);
+        $obj->prognosis = new Prognosis();
+
+        if ($adelay) {
+            $obj->prognosis->arrival = clone $arrDateTime;
+            $obj->prognosis->arrival= $obj->prognosis->arrival->add(new \DateInterval('P'.$adelay.'M'))->format(\DateTime::ISO8601);
+            $obj->delay = $adelay;
+        }
+        if ($ddelay) {
+            $obj->prognosis->departure = clone $depDateTime;
+            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('P'.$ddelay.'M'))->format(\DateTime::ISO8601);
+            $obj->delay = $ddelay;
+        }
+
+        return $obj;
+    }
 }

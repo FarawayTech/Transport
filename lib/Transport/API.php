@@ -193,11 +193,23 @@ class API
 
     public function getRoute(RouteQuery $query)
     {
-        // send request
-        $response = $this->sendQuery($query);
+        $query->addProvider($this->provider);
+        if ($query->isExtXML())
+        {
+            $response = $this->sendQuery($query);
+            $content = $response->getContent();
+        }
+        else {
+            $url = $query->getQueryURL() . '?' . http_build_query($query->toArray());
+            // send request
+            $response = $this->browser->get($url);
+            $content = $response->getContent();
+            $content .= '</StJourney>';
+            $content = str_replace('?>', '?><StJourney>', $content);
+        }
 
         // parse result
-        $result = simplexml_load_string($response->getContent());
+        $result = simplexml_load_string($content);
 
         $date = $query->date;
         $route = Entity\Schedule\Route::createFromXml($result, $date, null);

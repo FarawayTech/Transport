@@ -24,12 +24,9 @@ abstract class Query
 
     public function getQueryURL() {
         if ($this->provider->URL == null) {
-            if ($this instanceof StationBoardQuery)
-                return $this->provider->STB_URL;
+            return $this->provider->URL_QUERY;
         }
-        else
-            return $this->provider->URL;
-        return $this->provider->URL_QUERY;
+        return $this->provider->URL;
     }
 
     /**

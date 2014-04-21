@@ -4,6 +4,7 @@ namespace Transport\Entity\Schedule;
 
 use Transport\Entity\Query;
 use Transport\Entity\Location\Station;
+use Transport\Entity\Transportations;
 
 class RouteQuery extends Query
 {
@@ -28,6 +29,13 @@ class RouteQuery extends Query
         $this->jHandle = $jHandle;
     }
 
+    public function getQueryURL() {
+        if ($this->provider->URL == null) {
+            return $this->provider->STB_URL;
+        }
+        return $this->provider->URL;
+    }
+
     public function toXml()
     {
        //<JourneyReq date="20130902" time="22:42" type="DEP" externalId="008577784#95">
@@ -49,5 +57,20 @@ class RouteQuery extends Query
 
         return $request->asXML();
 
+    }
+
+    public function toArray()
+    {
+        $jhandle_arr = explode(";", $this->jHandle);
+        return array(
+            'sTI' => '1',
+            'start' => 'yes',
+            'L' => 'vs_java3',
+            'date' => $this->date->format('d.m.Y'),
+            'time' => $this->date->format('H:i'),
+            'REQTrain_name' => $jhandle_arr[0],
+            'dirInput' => $jhandle_arr[1],
+            'inputTripelId' => 'L='.$this->station->id
+        );
     }
 }

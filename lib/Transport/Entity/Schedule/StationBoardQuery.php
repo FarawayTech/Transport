@@ -31,6 +31,13 @@ class StationBoardQuery extends Query
         $this->date = $date;
     }
 
+    public function getQueryURL() {
+        if ($this->provider->URL == null) {
+            return $this->provider->STB_URL;
+        }
+        return $this->provider->URL;
+    }
+
     public function toXml()
     {
         $request = $this->createRequest('STBReq');
