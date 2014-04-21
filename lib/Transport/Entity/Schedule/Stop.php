@@ -122,12 +122,12 @@ class Stop
 
         if ($adelay) {
             $obj->prognosis->arrival = clone $arrDateTime;
-            $obj->prognosis->arrival= $obj->prognosis->arrival->add(new \DateInterval('P'.$adelay.'M'))->format(\DateTime::ISO8601);
+            $obj->prognosis->arrival= $obj->prognosis->arrival->add(new \DateInterval('PT'.$adelay.'M'))->format(\DateTime::ISO8601);
             $obj->delay = $adelay;
         }
         if ($ddelay) {
             $obj->prognosis->departure = clone $depDateTime;
-            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('P'.$ddelay.'M'))->format(\DateTime::ISO8601);
+            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('PT'.$ddelay.'M'))->format(\DateTime::ISO8601);
             $obj->delay = $ddelay;
         }
 
