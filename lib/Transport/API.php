@@ -41,7 +41,6 @@ class API
      */
     public function sendQuery(Query $query)
     {
-        $url = $this->provider->URL;
         $headers = array();
         $headers[] = 'User-Agent: SBBMobile/4.8 CFNetwork/609.1.4 Darwin/13.0.0';
         $headers[] = 'Accept: application/xml';
@@ -49,7 +48,7 @@ class API
 
         $query->addProvider($this->provider);
 
-        return $this->browser->post($url, $headers, $query->toXml());
+        return $this->browser->post($query->getQueryURL(), $headers, $query->toXml());
     }
 
     /**

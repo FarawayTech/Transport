@@ -2,15 +2,34 @@
 
 namespace Transport\Entity;
 
+use Transport\Entity\Schedule\StationBoardQuery;
 use Transport\Providers\Provider;
 
 abstract class Query
 {
     public $lang = 'EN';
-    private $provider;
+    protected $provider;
+    protected $supportsExtXML = true;
 
     public function addProvider(Provider $provider) {
         $this->provider = $provider;
+        if ($provider->URL == null) {
+            $this->supportsExtXML = false;
+        }
+    }
+
+    public function isExtXML() {
+        return $this->supportsExtXML;
+    }
+
+    public function getQueryURL() {
+        if ($this->provider->URL == null) {
+            if ($this instanceof StationBoardQuery)
+                return $this->provider->STB_URL;
+        }
+        else
+            return $this->provider->URL;
+        return $this->provider->URL_QUERY;
     }
 
     /**
@@ -28,9 +47,5 @@ abstract class Query
         return $request;
     }
 
-    public function toXml() {
-
-        $request = $this->createRequest();
-        return $request->asXML();
-    }
+    public abstract function toXml();
 }
