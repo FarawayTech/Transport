@@ -1,8 +1,17 @@
-class API
-{
-    protected const REQ_PROD = 'hafas';
-    protected const API_VERSION = '1.1';
+<?php
 
-    protected const SEARCH_MODE_NORMAL = 'N';
-    protected const SEARCH_MODE_ECONOMIC = 'P';
+namespace Transport\Providers;
+
+class Base
+{
+    protected $URL;
+    protected $URL_QUERY;
+    protected $STB_URL;
+
+    protected $REQ_PROD = 'hafas';
+    protected $API_VERSION = '1.1';
+    protected $ACCESS_ID;
+
+    const SEARCH_MODE_NORMAL = 'N';
+    const SEARCH_MODE_ECONOMIC = 'P';
 }
