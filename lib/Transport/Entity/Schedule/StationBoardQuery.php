@@ -60,5 +60,19 @@ class StationBoardQuery extends Query
 
         return $request->asXML();
     }
+    
+    public function toArray()
+    {
+        return array(
+            'boardType' => $this->boardType,
+            'start' => 'yes',
+            'L' => 'vs_java3',
+            'date' => $this->date->format('d.m.Y'),
+            'time' => $this->date->format('H:i'),
+            'maxJourneys' => $this->maxJourneys,
+            'input' => $this->station->id,
+            'productsFilter' => Transportations::reduceTransportations($this->transportations)
+        );
+    }
 
 }

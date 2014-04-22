@@ -130,6 +130,7 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
     $x = $request->get('x') ?: null;
     $y = $request->get('y') ?: null;
     if ($x && $y) {
+        // TODO: filter stations with the same name (ZVV)
         $query = new NearbyQuery($x, $y);
         $stations = $app['api']->findNearbyLocations($query);
     }
