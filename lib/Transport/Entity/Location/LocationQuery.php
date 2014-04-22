@@ -87,7 +87,7 @@ class LocationQuery extends Query
                 $location['match'] = $v;
 
                 if (!isset(self::$locationTypes[$this->type])) {
-                    $this->type = 'all'; // default type
+                    $this->type = 'station'; // default type
                 }
                 $location['type'] = self::$locationTypes[$this->type];
             }
