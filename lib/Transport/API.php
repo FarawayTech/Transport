@@ -3,6 +3,9 @@
 namespace Transport;
 
 use Buzz\Browser;
+use Transport\Entity\Location\Station;
+use Transport\Entity\Schedule\Route;
+use Transport\Entity\Schedule\StationBoardJourney;
 use Transport\Providers\Provider;
 use Transport\Entity\Query;
 use Transport\Entity\Location\LocationQuery;
@@ -52,6 +55,7 @@ class API
     }
 
     /**
+     * @param ConnectionQuery $query
      * @return array
      */
     public function findConnections(ConnectionQuery $query)
@@ -84,6 +88,7 @@ class API
     }
 
     /**
+     * @param LocationQuery $query
      * @return array
      */
     public function findLocations(LocationQuery $query)
@@ -122,6 +127,7 @@ class API
     }
 
     /**
+     * @param NearbyQuery $query
      * @return array
      */
     public function findNearbyLocations(NearbyQuery $query)
@@ -153,38 +159,27 @@ class API
     }
 
     /**
-     * @param Entity\Station $station
-     * @param string $boardType
-     * @param int $maxJourneys
-     * @param string $dateTime
-     * @param array $transportationTypes
+     * @param StationBoardQuery $query
+     * @param Station $station
+     * @return array $journeys
      */
-    public function getStationBoard(StationBoardQuery $query)
+    public function getStationBoard(StationBoardQuery $query, Station $station)
     {
+        $provider = $this->provider;
+        $query->addProvider($provider);
         // send request
-        $response = $this->sendQuery($query);
-
-        // parse result
-        $result = simplexml_load_string($response->getContent());
-
-        // since the stationboard always lists all connections starting from now we just use the date
-        // and wrap it accordingly if time goes over midnight
-        $journeys = array();
-        // subtract one minute because SBB also returns results for one minute in the past
-        $prevTime = time() - 60;
-        $date = $query->date;
-        if ($result->STBRes->JourneyList->STBJourney) {
-            foreach ($result->STBRes->JourneyList->STBJourney as $journey) {
-                $curTime = strtotime((string) $journey->MainStop->BasicStop->Dep->Time);
-                $prognosis = strtotime((string) $journey->MainStop->BasicStop->StopPrognosis->Dep->Time);
-                if (!$prognosis)
-                    $prognosis = $curTime;
-                if ($prevTime > $curTime && $prevTime > $prognosis) { // we passed midnight
-                    $date->add(new \DateInterval('P1D'));
-                }
-                $journeys[] = Entity\Schedule\StationBoardJourney::createFromXml($journey, $date, null);
-                $prevTime = $curTime;
-            }
+        if ($query->isExtXML())
+        {
+            $response = $this->sendQuery($query);
+            $result = simplexml_load_string($response->getContent());
+            $journeys = StationBoardJourney::createListFromXml($result, $query->date);
+        }
+        else {
+            $url = $query->getQueryURL() . '?' . http_build_query($query->toArray());
+            // send request
+            $response = $this->browser->get($url);
+            $result = simplexml_load_string($provider::cleanStbXML($response->getContent()));
+            $journeys = StationBoardJourney::createListFromStbXml($result, $station, $provider);
         }
 
         return $journeys;
@@ -193,7 +188,8 @@ class API
 
     public function getRoute(RouteQuery $query)
     {
-        $query->addProvider($this->provider);
+        $provider = $this->provider;
+        $query->addProvider($provider);
         if ($query->isExtXML())
         {
             $response = $this->sendQuery($query);
@@ -203,16 +199,14 @@ class API
             $url = $query->getQueryURL() . '?' . http_build_query($query->toArray());
             // send request
             $response = $this->browser->get($url);
-            $content = $response->getContent();
-            $content .= '</StJourney>';
-            $content = str_replace('?>', '?><StJourney>', $content);
+            $content = $provider::cleanRouteXML($response->getContent());
         }
 
         // parse result
         $result = simplexml_load_string($content);
 
         $date = $query->date;
-        $route = Entity\Schedule\Route::createFromXml($result, $date, null);
+        $route = Route::createFromXml($result, $date, null);
         return $route;
     }
 }

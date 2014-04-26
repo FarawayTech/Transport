@@ -133,4 +133,31 @@ class Stop
 
         return $obj;
     }
+
+    public static function createFromStbXml(\SimpleXMLElement $xml, Entity\Location\Station $station)
+    {
+        $obj = new Stop();
+        $obj->station = $station;
+        $obj->location = $station;
+
+        $date = new \DateTime();
+        $date->setTimestamp(strtotime((string)$xml['fpDate']));
+        $depDateTime = self::calculateDateTime((string) $xml['fpTime'], $date);
+        $obj->departure = $depDateTime->format(\DateTime::ISO8601);
+        $delay = (int)$xml['e_delay'];
+
+        if ($xml['platform'])
+            $obj->platform = trim((string) $xml['platform']);
+        $obj->prognosis = new Prognosis();
+
+        if ($delay) {
+            $obj->prognosis->departure = clone $depDateTime;
+            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('PT'.$delay.'M'))->format(\DateTime::ISO8601);
+            $obj->delay = $delay;
+        }
+        if ($xml['newpl'])
+            $obj->prognosis->platform = trim((string) $xml['newpl']);
+
+        return $obj;
+    }
 }

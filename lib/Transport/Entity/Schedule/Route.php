@@ -38,7 +38,7 @@ class Route
 
     private static function createFromStXML(\SimpleXMLElement $xml, \DateTime $date, Route $obj)
     {
-        foreach ($xml->children() as $stop) {
+        foreach ($xml->St as $stop) {
             try {
                 $stop = Stop::createFromStXml($stop, $date, null);
                 $obj->passList[] = $stop;
