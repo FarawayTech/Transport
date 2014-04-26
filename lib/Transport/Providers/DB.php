@@ -14,6 +14,14 @@ class DB extends Provider
         return $content;
     }
 
+    public static function cleanRouteXML($content)
+    {
+        $content = parent::cleanRouteXML($content);
+        $content .= '</StJourney>';
+        $content = '<?xml version="1.0" encoding="ISO-8859-1"?><StJourney>'. $content;
+        return $content;
+    }
+
     public static function intToProduct($class)
     {
         if ($class == 1)
