@@ -227,7 +227,7 @@ $app->get('/v1/stationboard', function(Request $request) use ($app) {
             $query->transportations = $transportations;
         }
         $query->maxJourneys = $limit;
-        $stationboard = $app['api']->getStationBoard($query);
+        $stationboard = $app['api']->getStationBoard($query, $station);
     }
 
     $result = array('station' => $station, 'stationboard' => $stationboard);

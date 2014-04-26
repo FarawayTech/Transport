@@ -64,7 +64,7 @@ class StationBoardQuery extends Query
     public function toArray()
     {
         return array(
-            'boardType' => $this->boardType,
+            'boardType' => strtolower($this->boardType),
             'start' => 'yes',
             'L' => 'vs_java3',
             'date' => $this->date->format('d.m.Y'),

@@ -125,7 +125,7 @@ class APITest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($response));
 
         $station = new Station('008591052'); // Zürich, Bäckeranlage
-        $journeys = $this->api->getStationBoard(new StationBoardQuery($station, \DateTime::createFromFormat(\DateTime::ISO8601, '2012-02-13T23:55:00+01:00')));
+        $journeys = $this->api->getStationBoard(new StationBoardQuery($station, \DateTime::createFromFormat(\DateTime::ISO8601, '2012-02-13T23:55:00+01:00')), $station);
 
         $this->assertEquals(3, count($journeys));
         $this->assertEquals('2012-02-13T23:57:00+0100', $journeys[0]->stop->departure);

@@ -3,6 +3,9 @@
 namespace Transport\Entity\Schedule;
 
 
+use Transport\Entity\Location\Station;
+use Transport\Providers\Provider;
+
 class Journey
 {
     public static $JOURNEYS =
@@ -78,10 +81,8 @@ class Journey
                                                        '8' => 'ffA6CE39', '9' => 'ff48479D', '10' => 'ffED3896',
                                                        '11' => 'ff00AB4D', '12' => 'ff78D0E2', '13' => 'ffFED304',
                                                        '14' => 'ff00AEEF', '15' => 'ffEE1D23', '17' => 'ffA1276F')));
-//    const CAT_REGEX = "/^(SN\\d{1,2}|S\\d{1,2})$/";
-//    static $CAT_ARRAY = array('BUS', 'EXT', 'FUN', 'BAT', 'BAV', 'LB', 'R', 'IR', 'IC', 'ICN','ICE', 'RE', 'ECN', 'EC',
-//                              'CNL','TGV', 'TLK');
     static $CAT_EXCLUDE = array('NFO', 'NFB', 'NFT', 'M', 'TRO', 'T');
+    static $SHORT_CAT_EXCLUDE = array('T', 'B', 'U');
 
     /**
      * @var string
@@ -92,6 +93,11 @@ class Journey
      * @var string
      */
     public $category;
+
+    /**
+     * @var string
+     */
+    public $shortCategory;
 
     /**
      * @var string
@@ -131,6 +137,11 @@ class Journey
     /**
      * @var string
      */
+    public $textColor;
+
+    /**
+     * @var string
+     */
     public $resolvedNumber;
 
     /**
@@ -157,6 +168,8 @@ class Journey
     static public function resolveNumber(Journey $obj)
     {
         $resolvedNumber = $obj->number;
+        if (in_array($obj->shortCategory, self::$SHORT_CAT_EXCLUDE))
+            return $resolvedNumber;
         if (is_null($obj->color) && !in_array($obj->category, self::$CAT_EXCLUDE))
         {
             $resolvedNumber = $obj->category;
@@ -225,6 +238,69 @@ class Journey
         }
 
         $obj->color = self::resolveColor($obj);
+        $obj->resolvedNumber = self::resolveNumber($obj);
+
+        return $obj;
+    }
+
+    public static function createFromStbXml(\SimpleXMLElement $xml, Station $station, Provider $provider, Journey $obj = null)
+    {
+        if (!$obj) {
+            $obj = new Journey();
+        }
+        $capacity = (string) $xml['capacity'];
+        if ($capacity and $capacity != '0|0') {
+            $capacities = explode("|", $capacity, 2);
+            $obj->capacity1st = $capacities[0];
+            $obj->capacity2nd = $capacities[1];
+        }
+
+
+        $class = (int) $xml['class'];
+        $obj->to = (string) $xml['dir'];
+        if (!$obj->to)
+            $obj->to = (string) $xml['targetLoc'];
+        $obj->number = (string)$xml['line'];
+
+        // resolving name, number and category
+        $hafasname = preg_replace('/\s+/', ' ', (string)$xml['hafasname']);
+        $prod = preg_replace('/\s+/', ' ', (string)$xml['prod']);
+
+        $prods = explode("#", $prod, 2);
+        $obj->name = $prods[0];
+        $obj->category = $prods[1];
+
+        if (!$obj->number) {
+            $catnumber = explode(" ", $obj->name, 2);
+            if (sizeof($catnumber) > 1)
+                $obj->number = $catnumber[1];
+            else
+                $obj->number = $obj->category;
+        }
+
+        // -- resolve shortCategory
+        if ($class)
+            $obj->shortCategory = $provider::intToProduct($class);
+        else
+            $obj->shortCategory = $provider::getShortCategory($obj->category);
+        // -- end shortCategory
+
+
+        // jhandle for route
+        $jhandle = array($obj->name, $xml['dirnr']);
+        $obj->jHandle = implode(";", $jhandle);
+
+        //---resolve color
+        $bg_color = (string) $xml['lineBG'];
+        $fg_color = (string) $xml['lineFG'];
+        if ($bg_color and $bg_color != 'ffffff')
+            $obj->color = 'ff' . $bg_color;
+        else
+            $obj->color = self::resolveColor($obj);
+
+        if ($fg_color and $fg_color != '000000')
+            $obj->textColor = 'ff' . $fg_color;
+        //---end color
         $obj->resolvedNumber = self::resolveNumber($obj);
 
         return $obj;
