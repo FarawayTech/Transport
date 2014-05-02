@@ -160,4 +160,12 @@ class Stop
 
         return $obj;
     }
+
+    public function isEmpty() {
+        if ($this->arrival)
+            return false;
+        if ($this->departure)
+            return false;
+        return true;
+    }
 }
