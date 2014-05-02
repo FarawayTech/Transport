@@ -1,6 +1,6 @@
 <?php
 
-$app['debug'] = false;
+$app['debug'] = true;
 $app['http_cache'] = true;
 $app['buzz.client'] = new Buzz\Client\Curl();
 $app['xhprof'] = false;
