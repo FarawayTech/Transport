@@ -28,6 +28,8 @@ class Route
         $journey = $xml->JourneyRes->Journey;
         if ($journey != null) {
             foreach ($journey->PassList->children() as $stop) {
+
+                // Skip station if no departure/arrival
                 try {
                     $stop = Stop::createFromXml($stop, $date, null);
                     $obj->passList[] = $stop;
@@ -41,7 +43,9 @@ class Route
         foreach ($xml->St as $stop) {
             try {
                 $stop = Stop::createFromStXml($stop, $date, null);
-                $obj->passList[] = $stop;
+                // Skip station if no departure/arrival
+                if (!$stop->isEmpty())
+                    $obj->passList[] = $stop;
             } catch (\Exception $e) { }
         }
     }
