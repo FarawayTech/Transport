@@ -139,11 +139,17 @@ class API
 
         // fix broken JSON
         $content = $response->getContent();
+        // check if we need to decode
+        $charset = $response->getHeaderAttribute('content-type', 'charset');
+        if ($charset == 'ISO-8859-1')
+            $content = utf8_encode($content);
+
         $content = preg_replace('/(\w+) ?:/i', '"\1":', $content);
         $content = str_replace("\\'", "'", $content);
 
         // parse result
         $result = json_decode($content);
+        // if null, check http://www.php.net/manual/en/function.json-last-error.php
 
         $locations = array();
         foreach ($result->stops as $stop) {
