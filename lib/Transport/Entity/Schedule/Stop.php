@@ -140,8 +140,7 @@ class Stop
         $obj->station = $station;
         $obj->location = $station;
 
-        $date = new \DateTime();
-        $date->setTimestamp(strtotime((string)$xml['fpDate']));
+        $date = \DateTime::createFromFormat('d.m.y', (string)$xml['fpDate']);
         $depDateTime = self::calculateDateTime((string) $xml['fpTime'], $date);
         $obj->departure = $depDateTime->format(\DateTime::ISO8601);
         $delay = (int)$xml['e_delay'];
