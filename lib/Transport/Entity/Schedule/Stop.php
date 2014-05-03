@@ -96,7 +96,7 @@ class Stop
         return $obj;
     }
 
-    static public function createFromStXml(\SimpleXMLElement $xml, \DateTime $date, Stop $obj = null)
+    static public function createFromRouteXml(\SimpleXMLElement $xml, \DateTime $date, Stop $obj = null, $prevTimeStr = null)
     {
         if (!$obj) {
             $obj = new Stop();
@@ -109,11 +109,21 @@ class Stop
 
         if ($xml['arrTime']) {
             $arrDateTime = self::calculateDateTime((string) $xml['arrTime'], $date);
+            if ($prevTimeStr) {
+                $prevTime = \DateTime::createFromFormat(\DateTime::ISO8601, $prevTimeStr);
+                if ($prevTime > $arrDateTime)
+                    $arrDateTime->add(new \DateInterval('P1D'));
+            }
             $obj->arrival = $arrDateTime->format(\DateTime::ISO8601);
             $adelay = (int) $xml['adelay'];
         }
         if ($xml['depTime']) {
             $depDateTime = self::calculateDateTime((string) $xml['depTime'], $date);
+            if ($prevTimeStr) {
+                $prevTime = \DateTime::createFromFormat(\DateTime::ISO8601, $prevTimeStr);
+                if ($prevTime > $depDateTime)
+                    $depDateTime->add(new \DateInterval('P1D'));
+            }
             $obj->departure = $depDateTime->format(\DateTime::ISO8601);
             $ddelay = (int) $xml['ddelay'];
         }

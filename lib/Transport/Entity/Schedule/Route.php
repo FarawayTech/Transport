@@ -40,12 +40,15 @@ class Route
 
     private static function createFromStXML(\SimpleXMLElement $xml, \DateTime $date, Route $obj)
     {
+        $prevDeparture = null;
         foreach ($xml->St as $stop) {
             try {
-                $stop = Stop::createFromStXml($stop, $date, null);
+                $stop = Stop::createFromRouteXml($stop, $date, null, $prevDeparture);
                 // Skip station if no departure/arrival
-                if (!$stop->isEmpty())
+                if (!$stop->isEmpty()) {
+                    $prevDeparture = $stop->departure;
                     $obj->passList[] = $stop;
+                }
             } catch (\Exception $e) { }
         }
     }
