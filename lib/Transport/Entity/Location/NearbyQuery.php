@@ -12,8 +12,10 @@ class NearbyQuery
 
     public $limit;
 
-    public function __construct($lat, $lon, $limit = 10)
+    public function __construct($lat, $lon, $limit = null)
     {
+        if (is_null($limit))
+            $limit = 10;
         $this->lat = $lat;
         $this->lon = $lon;
         $this->limit = $limit;
