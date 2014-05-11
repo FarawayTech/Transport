@@ -29,7 +29,7 @@ class Station extends Location
             $xml = new \SimpleXMLElement('<Station />');
         }
 
-        $xml->addAttribute('name', $this->name);
+        //$xml->addAttribute('name', $this->name);
         $xml->addAttribute('externalId', $this->id);
 
         return $xml;
