@@ -211,8 +211,7 @@ class API
         // parse result
         $result = simplexml_load_string($content);
 
-        $date = $query->date;
-        $route = Route::createFromXml($result, $date, null);
+        $route = Route::createFromXml($result, $query->date, $query->station);
         return $route;
     }
 }
