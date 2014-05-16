@@ -18,14 +18,13 @@ class Provider
     public static function getProvider($country, $area, $locality)
     {
         // http://rmv.hafas.de/bin/query.exe/en - Rhein am Main, supports vs_java3 for stboard.exe
-        // www.vbb-fahrinfo.de/hafas/query.exe/en - Berlin, supports vs_java3
         $provider = new SBB();
         if ($country == 'CH') {
             if ($area == 'Zurich')
                 $provider = new ZVV();
         } else if ($country == 'DE'){
             if($locality=='Berlin')
-                $provider = new DB();
+                $provider = new VBB();
         }
         return $provider;
     }
