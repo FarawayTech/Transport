@@ -10,7 +10,7 @@ class Prognosis
     public $capacity1st;
     public $capacity2nd;
 
-    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $arrival, \DateTime $departure)
+    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $arrival = null, \DateTime $departure = null)
     {
         $obj = new Prognosis();
 
