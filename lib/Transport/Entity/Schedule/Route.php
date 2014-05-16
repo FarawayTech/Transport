@@ -3,27 +3,36 @@
 namespace Transport\Entity\Schedule;
 
 
+use Transport\Entity\Location\Station;
+
 class Route
 {
     /**
      * @var array
      */
     public $passList = array();
+    private $station;
+    private $datetime;
 
-    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Route $obj = null)
+    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Station $station)
     {
-        if (!$obj) {
-            $obj = new Route();
-        }
+        $obj = new Route();
+        $obj->station = $station;
 
         if ($xml->getName() == 'StJourney')
-            self::createFromStXML($xml, $date, $obj);
+            $obj->createFromStXML($xml, $date, $obj);
         else
-            self::createFromExtXML($xml, $date, $obj);
+            $obj->createFromExtXML($xml, $date, $obj);
+
+        // Check the interval between the departure/arrival from the stops, if not the same, subtract one day
+        $interval = date_diff($date, $obj->datetime);
+        if ($interval->d > 0 || $interval->h > 0) {
+            $obj->decrementOneDay();
+        }
         return $obj;
     }
 
-    private static function createFromExtXML(\SimpleXMLElement $xml, \DateTime $date, Route $obj)
+    private function createFromExtXML(\SimpleXMLElement $xml, \DateTime $date)
     {
         $journey = $xml->JourneyRes->Journey;
         if ($journey != null) {
@@ -32,13 +41,16 @@ class Route
                 // Skip station if no departure/arrival
                 try {
                     $stop = Stop::createFromXml($stop, $date, null);
-                    $obj->passList[] = $stop;
+                    $this->passList[] = $stop;
+                    if ($stop->station->id === $this->station->id)
+                        $this->datetime = $stop->departure;
+
                 } catch (\Exception $e) { }
             }
         }
     }
 
-    private static function createFromStXML(\SimpleXMLElement $xml, \DateTime $date, Route $obj)
+    private function createFromStXML(\SimpleXMLElement $xml, \DateTime $date)
     {
         $prevDeparture = null;
         foreach ($xml->St as $stop) {
@@ -47,9 +59,24 @@ class Route
                 // Skip station if no departure/arrival
                 if (!$stop->isEmpty()) {
                     $prevDeparture = $stop->departure;
-                    $obj->passList[] = $stop;
+                    $this->passList[] = $stop;
+                    if ($stop->station->id === ltrim($this->station->id, '0'))
+                        $this->datetime = $stop->departure;
                 }
             } catch (\Exception $e) { }
+        }
+    }
+
+    private function decrementOneDay() {
+        foreach($this->passList as $stop) {
+            if ($stop->arrival)
+                $stop->arrival->sub(new \DateInterval('P1D'));
+            if ($stop->departure)
+                $stop->departure->sub(new \DateInterval('P1D'));
+            if ($stop->prognosis->arrival)
+                $stop->prognosis->arrival->sub(new \DateInterval('P1D'));
+            if ($stop->prognosis->departure)
+                $stop->prognosis->departure->sub(new \DateInterval('P1D'));
         }
     }
 }
