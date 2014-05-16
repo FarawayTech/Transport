@@ -16,6 +16,12 @@ class FieldsNormalizer extends SerializerAwareNormalizer
         foreach ($fields as $field) {
             $this->fields = array_merge_recursive($this->fields, $this->getFieldTree($field));
         }
+
+        $datetimeNormalize = function ($dateTime) {
+            return $dateTime instanceof \DateTime
+                ? $dateTime->format(\DateTime::ISO8601)
+                : '';
+        };
     }
 
     /**
@@ -70,6 +76,10 @@ class FieldsNormalizer extends SerializerAwareNormalizer
     public function normalize($object, $format = null)
     {
         $attributes = array();
+        $class = get_class($object);
+        if ($class == 'DateTime') {
+            return $object->format(\DateTime::ISO8601);
+        }
         foreach ($object as $name => $value) {
 
             $parentField = $this->parentField;
