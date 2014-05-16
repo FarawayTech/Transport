@@ -57,9 +57,6 @@ class Stop
             $obj = new Stop();
         }
 
-        $dateTime = null;
-        $isArrival = false;
-
         $obj->station = Entity\Location\Station::createFromXml($xml->Station); // deprecated, use location instead
 
         foreach ($xml->children() as $location) {
@@ -72,31 +69,28 @@ class Stop
         }
 
         if ($xml->Arr) {
-            $isArrival = true;
-            $dateTime = self::calculateDateTime((string) $xml->Arr->Time, $date);
-            $obj->arrival = $dateTime->format(\DateTime::ISO8601);
+            $obj->arrival = self::calculateDateTime((string) $xml->Arr->Time, $date);
             $obj->platform = trim((string) $xml->Arr->Platform->Text);
         }
         if ($xml->Dep) {
-            $dateTime = self::calculateDateTime((string) $xml->Dep->Time, $date);
-            $obj->departure = $dateTime->format(\DateTime::ISO8601);
+            $obj->departure = self::calculateDateTime((string) $xml->Dep->Time, $date);
             $obj->platform = trim((string) $xml->Dep->Platform->Text);
         }
-        $obj->prognosis = Prognosis::createFromXml($xml->StopPrognosis, $dateTime, $isArrival);
+        $obj->prognosis = Prognosis::createFromXml($xml->StopPrognosis, $obj->arrival, $obj->departure);
 
         if ($obj->prognosis) {
             if ($obj->prognosis->arrival && $obj->arrival) {
-                $obj->delay = (strtotime($obj->prognosis->arrival) - strtotime($obj->arrival)) / 60;
+                $obj->delay = ($obj->prognosis->arrival->getTimestamp() - $obj->arrival->getTimestamp()) / 60;
             }
             if ($obj->prognosis->departure && $obj->departure) {
-                $obj->delay = (strtotime($obj->prognosis->departure) - strtotime($obj->departure)) / 60;
+                $obj->delay = ($obj->prognosis->departure->getTimestamp() - $obj->departure->getTimestamp()) / 60;
             }
         }
 
         return $obj;
     }
 
-    static public function createFromRouteXml(\SimpleXMLElement $xml, \DateTime $date, Stop $obj = null, $prevTimeStr = null)
+    static public function createFromRouteXml(\SimpleXMLElement $xml, \DateTime $date, Stop $obj = null, $prevTime = null)
     {
         if (!$obj) {
             $obj = new Stop();
@@ -108,36 +102,31 @@ class Stop
         $ddelay = 0;
 
         if ($xml['arrTime']) {
-            $arrDateTime = self::calculateDateTime((string) $xml['arrTime'], $date);
-            if ($prevTimeStr) {
-                $prevTime = \DateTime::createFromFormat(\DateTime::ISO8601, $prevTimeStr);
-                if ($prevTime > $arrDateTime)
-                    $arrDateTime->add(new \DateInterval('P1D'));
+            $obj->arrival = self::calculateDateTime((string) $xml['arrTime'], $date);
+            if ($prevTime) {
+                if ($prevTime > $obj->arrival)
+                    $obj->arrival->add(new \DateInterval('P1D'));
             }
-            $obj->arrival = $arrDateTime->format(\DateTime::ISO8601);
             $adelay = (int) $xml['adelay'];
         }
         if ($xml['depTime']) {
-            $depDateTime = self::calculateDateTime((string) $xml['depTime'], $date);
-            if ($prevTimeStr) {
-                $prevTime = \DateTime::createFromFormat(\DateTime::ISO8601, $prevTimeStr);
-                if ($prevTime > $depDateTime)
-                    $depDateTime->add(new \DateInterval('P1D'));
+            $obj->departure = self::calculateDateTime((string) $xml['depTime'], $date);
+            if ($prevTime) {
+                if ($prevTime > $obj->departure)
+                    $obj->departure->add(new \DateInterval('P1D'));
             }
-            $obj->departure = $depDateTime->format(\DateTime::ISO8601);
             $ddelay = (int) $xml['ddelay'];
         }
         $obj->platform = trim((string) $xml['platform']);
-        $obj->prognosis = new Prognosis();
 
         if ($adelay) {
-            $obj->prognosis->arrival = clone $arrDateTime;
-            $obj->prognosis->arrival= $obj->prognosis->arrival->add(new \DateInterval('PT'.$adelay.'M'))->format(\DateTime::ISO8601);
+            $obj->prognosis->arrival = clone $obj->arrival;
+            $obj->prognosis->arrival= $obj->prognosis->arrival->add(new \DateInterval('PT'.$adelay.'M'));
             $obj->delay = $adelay;
         }
         if ($ddelay) {
-            $obj->prognosis->departure = clone $depDateTime;
-            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('PT'.$ddelay.'M'))->format(\DateTime::ISO8601);
+            $obj->prognosis->departure = clone $obj->departure;
+            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('PT'.$ddelay.'M'));
             $obj->delay = $ddelay;
         }
 
@@ -151,8 +140,7 @@ class Stop
         $obj->location = $station;
 
         $date = \DateTime::createFromFormat('d.m.y', (string)$xml['fpDate']);
-        $depDateTime = self::calculateDateTime((string) $xml['fpTime'], $date);
-        $obj->departure = $depDateTime->format(\DateTime::ISO8601);
+        $obj->departure = self::calculateDateTime((string) $xml['fpTime'], $date);
         $delay = (int)$xml['e_delay'];
 
         if ($xml['platform'])
@@ -160,8 +148,8 @@ class Stop
         $obj->prognosis = new Prognosis();
 
         if ($delay) {
-            $obj->prognosis->departure = clone $depDateTime;
-            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('PT'.$delay.'M'))->format(\DateTime::ISO8601);
+            $obj->prognosis->departure = clone $obj->departure;
+            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('PT'.$delay.'M'));
             $obj->delay = $delay;
         }
         if ($xml['newpl'])

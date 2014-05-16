@@ -10,33 +10,28 @@ class Prognosis
     public $capacity1st;
     public $capacity2nd;
 
-    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, $isArrival, Prognosis $obj = null)
+    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $arrival, \DateTime $departure)
     {
-        if (!$obj) {
-            $obj = new Prognosis();
-        }
+        $obj = new Prognosis();
 
-        if ($isArrival) {
-
-            if ($xml->Arr) {
-                if ($xml->Arr->Platform) {
-                    $obj->platform = (string) $xml->Arr->Platform->Text;
-                }
-                if ($xml->Arr->Time) {
-                    $obj->arrival = Stop::calculateDateTime((string) $xml->Arr->Time, $date)->format(\DateTime::ISO8601);
-                }
+        if ($xml->Arr) {
+            if ($xml->Arr->Platform) {
+                $obj->platform = (string) $xml->Arr->Platform->Text;
             }
-        } else {
-
-            if ($xml->Dep) {
-                if ($xml->Dep->Platform) {
-                    $obj->platform = (string) $xml->Dep->Platform->Text;
-                }
-                if ($xml->Dep->Time) {
-                    $obj->departure = Stop::calculateDateTime((string) $xml->Dep->Time, $date)->format(\DateTime::ISO8601);
-                }
+            if ($xml->Arr->Time) {
+                $obj->arrival = Stop::calculateDateTime((string) $xml->Arr->Time, $arrival);
             }
         }
+
+        if ($xml->Dep) {
+            if ($xml->Dep->Platform) {
+                $obj->platform = (string) $xml->Dep->Platform->Text;
+            }
+            if ($xml->Dep->Time) {
+                $obj->departure = Stop::calculateDateTime((string) $xml->Dep->Time, $departure);
+            }
+        }
+
 
         if ($xml->Capacity1st) {
             $obj->capacity1st = (int) $xml->Capacity1st;
