@@ -257,9 +257,9 @@ class Journey
 
 
         $class = (int) $xml['class'];
-        $obj->to = (string) $xml['dir'];
+        $obj->to = (string) $xml[$provider::$DEST_ATTR1];
         if (!$obj->to)
-            $obj->to = (string) $xml['targetLoc'];
+            $obj->to = (string) $xml[$provider::$DEST_ATTR2];
         $obj->number = (string)$xml['line'];
 
         // resolving name, number and category

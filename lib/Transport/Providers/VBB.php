@@ -4,8 +4,10 @@ namespace Transport\Providers;
 
 class VBB extends Provider
 {
-    public  $STB_URL = 'http://fahrinfo.vbb.de/hafas/stboard.exe/en';
-    public  $URL_QUERY = 'http://fahrinfo.vbb.de/hafas/query.exe/eny';
+    public $STB_URL = 'http://fahrinfo.vbb.de/hafas/stboard.exe/en';
+    public $URL_QUERY = 'http://fahrinfo.vbb.de/hafas/query.exe/eny';
+    public static $DEST_ATTR1 = 'targetLoc';
+    public static $DEST_ATTR2 = 'dir';
 
     public static function cleanRouteXML($content)
     {

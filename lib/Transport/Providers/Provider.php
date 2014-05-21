@@ -15,6 +15,9 @@ class Provider
     const SEARCH_MODE_NORMAL = 'N';
     const SEARCH_MODE_ECONOMIC = 'P';
 
+    public static $DEST_ATTR1 = 'dir';
+    public static $DEST_ATTR2 = 'targetLoc';
+
     public static function getProvider($country, $area, $locality)
     {
         // http://rmv.hafas.de/bin/query.exe/en - Rhein am Main, supports vs_java3 for stboard.exe
