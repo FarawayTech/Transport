@@ -82,7 +82,7 @@ class Journey
                                                        '11' => 'ff00AB4D', '12' => 'ff78D0E2', '13' => 'ffFED304',
                                                        '14' => 'ff00AEEF', '15' => 'ffEE1D23', '17' => 'ffA1276F')));
     static $CAT_EXCLUDE = array('NFO', 'NFB', 'NFT', 'M', 'TRO', 'T');
-    static $SHORT_CAT_EXCLUDE = array('T', 'B', 'U');
+    static $SHORT_CAT_EXCLUDE = array('T', 'B');
 
     /**
      * @var string
@@ -302,6 +302,8 @@ class Journey
             $obj->textColor = 'ff' . $fg_color;
         //---end color
         $obj->resolvedNumber = self::resolveNumber($obj);
+        if (in_array($obj->shortCategory, array('S', 'U')) && $hafasname)
+            $obj->resolvedNumber = $hafasname;
 
         return $obj;
     }
