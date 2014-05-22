@@ -38,6 +38,12 @@ class Statistics {
         $this->count('stats:resources', $path, array('path' => $path));
     }
 
+    public function nameNumber($name, $number) {
+        $key = "stats:namenumbers:$number";
+        $this->redis->lpush($key, $name);
+        $this->redis->sadd("stats:namenumbers", $key);
+    }
+
     protected function count($prefix, $id, $data)
     {
         if ($this->redis) {
@@ -75,6 +81,24 @@ class Statistics {
     public function getTopStations()
     {
         return $this->top('stats:stations', array('name', 'x', 'y', 'calls'));
+    }
+
+    public function stationboardNumbers($stationboard)
+    {
+        foreach ($stationboard as $journey) {
+            $this->nameNumber($journey->name, $journey->resolvedNumber);
+        }
+
+    }
+
+    public function getAllNames() {
+        // regroup
+        $data = array();
+        foreach ($this->redis->smembers("stats:namenumbers") as $key) {
+            $data[] = $this->redis->range($key, 0, -1);
+        }
+
+        return $data;
     }
 
     protected function top($key, $fields)

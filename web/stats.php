@@ -43,6 +43,7 @@ if ($app['redis.config']) {
         // get top resources and stations
         $resources = $app['stats']->getTopResources();
         $stations = $app['stats']->getTopStations();
+        $names = $app['stats']->getAllNames();
 
         // CSV response
         if ($request->get('format') == 'csv') {
@@ -70,6 +71,7 @@ if ($app['redis.config']) {
 	        'calls' => $calls,
 	        'resources' => $resources,
 	        'stations' => $stations,
+            'names' => $names,
 	    ));
 	});
 } else {
