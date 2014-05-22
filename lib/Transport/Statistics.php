@@ -39,9 +39,11 @@ class Statistics {
     }
 
     protected function nameNumber($name, $number) {
-        $key = "stats:namenumbers:$number";
-        $this->redis->sadd($key, $name);
-        $this->redis->sadd("stats:namenumbers", $key);
+        if ($this->redis) {
+            $key = "stats:namenumbers:$number";
+            $this->redis->sadd($key, $name);
+            $this->redis->sadd("stats:namenumbers", $key);
+        }
     }
 
     protected function count($prefix, $id, $data)
