@@ -22,5 +22,7 @@ $app['redis.config'] = array(
     'password' => parse_url($_ENV['REDISCLOUD_URL'], PHP_URL_PASS),
 );
 
+//$app['redis.config'] = array('host' => 'localhost', 'port' => 6379);
+
 // if hosted behind a reverse proxy
 $app['proxy'] = false;

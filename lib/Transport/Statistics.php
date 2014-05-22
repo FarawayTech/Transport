@@ -38,9 +38,9 @@ class Statistics {
         $this->count('stats:resources', $path, array('path' => $path));
     }
 
-    public function nameNumber($name, $number) {
+    protected function nameNumber($name, $number) {
         $key = "stats:namenumbers:$number";
-        $this->redis->lpush($key, $name);
+        $this->redis->sadd($key, $name);
         $this->redis->sadd("stats:namenumbers", $key);
     }
 
@@ -86,7 +86,9 @@ class Statistics {
     public function stationboardNumbers($stationboard)
     {
         foreach ($stationboard as $journey) {
-            $this->nameNumber($journey->name, $journey->resolvedNumber);
+            $name = preg_replace('/\d/', '$', $journey->name);
+            $number = preg_replace('/\d/', '$', $journey->resolvedNumber);
+            $this->nameNumber($name, $number);
         }
 
     }
@@ -95,7 +97,7 @@ class Statistics {
         // regroup
         $data = array();
         foreach ($this->redis->smembers("stats:namenumbers") as $key) {
-            $data[] = $this->redis->range($key, 0, -1);
+            $data[explode(":", $key)[2]] = $this->redis->smembers($key);
         }
 
         return $data;

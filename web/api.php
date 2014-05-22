@@ -233,6 +233,8 @@ $app->get('/v1/stationboard', function(Request $request) use ($app) {
 
     $result = array('station' => $station, 'stationboard' => $stationboard);
 
+    $app['stats']->stationboardNumbers($stationboard);
+
     $json = $app['serializer']->serialize((object) $result, 'json');
     return new Response($json, 200, array('Content-Type' => 'application/json'));
 });
