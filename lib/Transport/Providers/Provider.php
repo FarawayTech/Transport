@@ -22,13 +22,13 @@ class Provider
     {
         // http://rmv.hafas.de/bin/query.exe/en - Rhein am Main, supports vs_java3 for stboard.exe
         $provider = new SBB();
-        if ($country == 'CH') {
-            if ($area == 'Zurich')
-                $provider = new ZVV();
-        } else if ($country == 'DE'){
-            if($locality=='Berlin')
-                $provider = new VBB();
-        }
+//        if ($country == 'CH') {
+//            if ($area == 'Zurich')
+//                $provider = new ZVV();
+//        } else if ($country == 'DE'){
+//            if($locality=='Berlin')
+//                $provider = new VBB();
+//        }
         return $provider;
     }
 
