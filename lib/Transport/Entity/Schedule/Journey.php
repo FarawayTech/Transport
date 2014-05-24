@@ -3,7 +3,6 @@
 namespace Transport\Entity\Schedule;
 
 
-use Transport\Entity\Location\Station;
 use Transport\Providers\Provider;
 
 class Journey
@@ -81,8 +80,8 @@ class Journey
                                                        '8' => 'ffA6CE39', '9' => 'ff48479D', '10' => 'ffED3896',
                                                        '11' => 'ff00AB4D', '12' => 'ff78D0E2', '13' => 'ffFED304',
                                                        '14' => 'ff00AEEF', '15' => 'ffEE1D23', '17' => 'ffA1276F')));
-    static $CAT_EXCLUDE = array('NFO', 'NFB', 'NFT', 'M', 'TRO', 'T', 'BUS');
-    static $SHORT_CAT_EXCLUDE = array('T', 'B');
+    static $SHORT_CAT_EXCLUDES = array('T' => 'Tram', 'B' => 'Bus');
+    static $SUB_CAT_EXCLUDES = array('S', 'U', 'M');
 
     /**
      * @var string
@@ -155,7 +154,7 @@ class Journey
         $dest_pieces = explode(',', $obj->to);
         $dest_piece = $dest_pieces[0];
 
-        foreach (self::$JOURNEYS as $name => $values) {
+        foreach (self::$JOURNEYS as $values) {
             if (in_array($dest_piece, $values['places'])) {
                 if (isset($values['colors'][$obj->number])) {
                     return $values['colors'][$obj->number];
@@ -167,14 +166,22 @@ class Journey
 
     static public function resolveNumber(Journey $obj)
     {
-        $resolvedNumber = $obj->number;
-        if (in_array($obj->shortCategory, self::$SHORT_CAT_EXCLUDE))
-            return $resolvedNumber;
-        if (is_null($obj->color) && !in_array($obj->category, self::$CAT_EXCLUDE))
-        {
-            $resolvedNumber = $obj->category;
+        if (!is_null($obj->color))
+            return $obj->number;
+        if (in_array($obj->shortCategory, array_keys(self::$SHORT_CAT_EXCLUDES))) {
+            if (strlen($obj->number) <= 3) {
+                $obj->category = self::$SHORT_CAT_EXCLUDES[$obj->shortCategory];
+                return $obj->number;
+            }
         }
-        return $resolvedNumber;
+        // Handle S and U
+        if (in_array($obj->shortCategory, self::$SUB_CAT_EXCLUDES) && strlen($obj->number) <= 2){
+            if (strtoupper(substr($obj->number, 0, 1)) == $obj->shortCategory)
+                return $obj->number;
+            else
+                return $obj->shortCategory.$obj->number;
+        }
+        return $obj->category;
     }
 
     static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Provider $provider, Journey $obj = null)
@@ -185,7 +192,6 @@ class Journey
 
         $obj->jHandle = implode(";",current($xml->JHandle->attributes()));
 
-        // TODO: get attributes
         if ($xml->JourneyAttributeList) {
             foreach ($xml->JourneyAttributeList->JourneyAttribute AS $journeyAttribute) {
 
@@ -303,8 +309,6 @@ class Journey
             $obj->textColor = 'ff' . $fg_color;
         //---end color
         $obj->resolvedNumber = self::resolveNumber($obj);
-        if (in_array($obj->shortCategory, array('S', 'U')) && $hafasname)
-            $obj->resolvedNumber = $hafasname;
 
         return $obj;
     }
