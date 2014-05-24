@@ -3,6 +3,7 @@
 namespace Transport\Entity\Schedule;
 
 use Transport\Entity;
+use Transport\Providers\Provider;
 
 /**
  * Connection
@@ -54,7 +55,7 @@ class Connection
      */
     public $sections;
 
-    static public function createFromXml(\SimpleXMLElement $xml, Connection $obj = null)
+    static public function createFromXml(\SimpleXMLElement $xml, Provider $provider, Connection $obj = null)
     {
         if (!$obj) {
             $obj = new Connection();
@@ -109,7 +110,7 @@ class Connection
 
         foreach ($xml->ConSectionList->ConSection as $section) {
 
-            $obj->sections[] = Entity\Schedule\Section::createFromXml($section, $date, null);
+            $obj->sections[] = Entity\Schedule\Section::createFromXml($section, $date, $provider, null);
         }
 
         return $obj;

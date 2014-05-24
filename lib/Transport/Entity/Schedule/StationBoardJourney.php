@@ -20,33 +20,31 @@ class StationBoardJourney extends Journey
      * @param   Journey             $obj    An optional existing journey to overwrite
      * @return  Journey
      */
-    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Journey $obj = null)
+    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Provider $provider, Journey $obj = null)
     {
         if (!$obj) {
             $obj = new StationBoardJourney();
         }
 
-        $obj = Journey::createFromXml($xml, $date, $obj);
+        $obj = Journey::createFromXml($xml, $date, $provider, $obj);
 
         $obj->stop = Stop::createFromXml($xml->MainStop->BasicStop, $date, null);
 
         return $obj;
     }
 
-    static public function createFromStbXml(\SimpleXMLElement $xml, Station $station, Provider $provider, Journey $obj = null)
+    static public function createFromStbXml(\SimpleXMLElement $xml, Provider $provider, Journey $obj = null)
     {
         if (!$obj) {
             $obj = new StationBoardJourney();
         }
 
-        $obj = Journey::createFromStbXml($xml, $station, $provider, $obj);
-
-        $obj->stop = Stop::createFromStbXml($xml, $station);
+        $obj = Journey::createFromStbXml($xml, $provider, $obj);
 
         return $obj;
     }
 
-    public static function createListFromXml(\SimpleXMLElement $xml, \DateTime $date)
+    public static function createListFromXml(\SimpleXMLElement $xml, \DateTime $date, Provider $provider)
     {
         // since the stationboard always lists all connections starting from now we just use the date
         // and wrap it accordingly if time goes over midnight
@@ -63,7 +61,7 @@ class StationBoardJourney extends Journey
                 if ($prevTime > $curTime && $prevTime > $prognosis) { // we passed midnight
                     $localDate->add(new \DateInterval('P1D'));
                 }
-                $journeys[] = self::createFromXml($journey, $localDate, null);
+                $journeys[] = self::createFromXml($journey, $localDate, $provider, null);
                 $prevTime = $curTime;
             }
         }
@@ -77,8 +75,11 @@ class StationBoardJourney extends Journey
         if ($xml->Journey) {
             foreach ($xml->Journey as $journey) {
                 $delay = (string)$journey['delay'];
-                if ($delay != 'cancel')
-                    $journeys[] = self::createFromStbXml($journey, $station, $provider);
+                if ($delay != 'cancel') {
+                    $journey_obj = self::createFromStbXml($journey, $provider);
+                    $journey_obj->stop = Stop::createFromStbXml($journey, $station);
+                    $journeys[] = $journey_obj;
+                }
             }
         }
         return $journeys;

@@ -81,7 +81,7 @@ class Journey
                                                        '8' => 'ffA6CE39', '9' => 'ff48479D', '10' => 'ffED3896',
                                                        '11' => 'ff00AB4D', '12' => 'ff78D0E2', '13' => 'ffFED304',
                                                        '14' => 'ff00AEEF', '15' => 'ffEE1D23', '17' => 'ffA1276F')));
-    static $CAT_EXCLUDE = array('NFO', 'NFB', 'NFT', 'M', 'TRO', 'T');
+    static $CAT_EXCLUDE = array('NFO', 'NFB', 'NFT', 'M', 'TRO', 'T', 'BUS');
     static $SHORT_CAT_EXCLUDE = array('T', 'B');
 
     /**
@@ -177,7 +177,7 @@ class Journey
         return $resolvedNumber;
     }
 
-    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Journey $obj = null)
+    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Provider $provider, Journey $obj = null)
     {
         if (!$obj) {
             $obj = new Journey();
@@ -237,13 +237,14 @@ class Journey
             $obj->capacity2nd = max($capacities2nd);
         }
 
+        $obj->shortCategory = $provider::getShortCategory($obj->category);
         $obj->color = self::resolveColor($obj);
         $obj->resolvedNumber = self::resolveNumber($obj);
 
         return $obj;
     }
 
-    public static function createFromStbXml(\SimpleXMLElement $xml, Station $station, Provider $provider, Journey $obj = null)
+    public static function createFromStbXml(\SimpleXMLElement $xml, Provider $provider, Journey $obj = null)
     {
         if (!$obj) {
             $obj = new Journey();

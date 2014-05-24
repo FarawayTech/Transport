@@ -80,7 +80,7 @@ class API
         $connections = array();
         if ($result->ConRes->ConnectionList->Connection) {
             foreach ($result->ConRes->ConnectionList->Connection as $connection) {
-                $connections[] = Entity\Schedule\Connection::createFromXml($connection, null);
+                $connections[] = Entity\Schedule\Connection::createFromXml($connection, $this->provider, null);
             }
         }
 
@@ -178,7 +178,7 @@ class API
         {
             $response = $this->sendQuery($query);
             $result = simplexml_load_string($response->getContent());
-            $journeys = StationBoardJourney::createListFromXml($result, $query->date);
+            $journeys = StationBoardJourney::createListFromXml($result, $query->date, $provider);
         }
         else {
             $url = $query->getQueryURL() . '?' . http_build_query($query->toArray());

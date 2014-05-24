@@ -3,6 +3,7 @@
 namespace Transport\Entity\Schedule;
 
 use Transport\Entity;
+use Transport\Providers\Provider;
 
 class Section
 {
@@ -26,14 +27,14 @@ class Section
      */
     public $arrival;
     
-    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Section $obj = null)
+    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, Provider $provider, Section $obj = null)
     {
         if (!$obj) {
             $obj = new Section();
         }
 
         if ($xml->Journey) {
-            $obj->journey = Entity\Schedule\Journey::createFromXml($xml->Journey, $date, null);
+            $obj->journey = Entity\Schedule\Journey::createFromXml($xml->Journey, $date, $provider, null);
         }
 
         if ($xml->Walk) {
