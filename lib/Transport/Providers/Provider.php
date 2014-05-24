@@ -355,7 +355,7 @@ class Provider
             return 'R';
 
         // Suburban Trains
-        if (preg_match('/SN?\d*$/', $category)) // Generic (Night) S-Bahn
+        if (preg_match('/^SN?\d*$/', $category)) // Generic (Night) S-Bahn
             return 'S';
         if ("S-BAHN" == $category)
             return 'S';
