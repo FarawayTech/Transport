@@ -166,8 +166,6 @@ class Journey
 
     static public function resolveNumber(Journey $obj)
     {
-        if (!is_null($obj->color))
-            return $obj->number;
         if (in_array($obj->shortCategory, array_keys(self::$SHORT_CAT_EXCLUDES))) {
             if (strlen($obj->number) <= 3) {
                 $obj->category = self::$SHORT_CAT_EXCLUDES[$obj->shortCategory];
@@ -180,6 +178,9 @@ class Journey
                 return $obj->number;
             else
                 return $obj->shortCategory.$obj->number;
+        }
+        if (!is_null($obj->color)) {
+            return $obj->number;
         }
         return $obj->category;
     }
