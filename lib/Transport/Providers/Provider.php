@@ -46,9 +46,11 @@ class Provider
         $content = str_replace("<u>", " ", $content);
         $content = str_replace("</u>", " ", $content);
         $content = str_replace("<br />", " ", $content);
+        $content = str_replace("<br>", " ", $content);
         $content = str_replace(" ->", " &#x2192;", $content);
         $content = str_replace(" <-", " &#x2190;", $content);
         $content = str_replace(" <> ", " &#x2194; ", $content);
+        $content = str_replace("&nbsp;", " ", $content);
         return $content;
     }
 
