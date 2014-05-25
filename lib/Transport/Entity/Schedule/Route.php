@@ -19,15 +19,19 @@ class Route
         $obj = new Route();
         $obj->station = $station;
 
-        if ($xml->getName() == 'StJourney')
+        if ($xml->getName() == 'Journey')
             $obj->createFromStXML($xml, $date, $obj);
         else
             $obj->createFromExtXML($xml, $date, $obj);
 
         // Check the interval between the departure/arrival from the stops, if not the same, subtract one day
-        $interval = date_diff($date, $obj->datetime);
-        if ($interval->d > 0 || $interval->h > 0) {
-            $obj->decrementOneDay();
+        if ($obj->datetime)
+        {
+            // TODO: report to admin
+            $interval = date_diff($date, $obj->datetime);
+            if ($interval->d > 0 || $interval->h > 0) {
+                $obj->decrementOneDay();
+            }
         }
         return $obj;
     }

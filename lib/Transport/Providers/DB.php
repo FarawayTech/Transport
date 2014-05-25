@@ -17,8 +17,8 @@ class DB extends Provider
     public static function cleanRouteXML($content)
     {
         $content = parent::cleanRouteXML($content);
-        $content .= '</StJourney>';
-        $content = '<?xml version="1.0" encoding="ISO-8859-1"?><StJourney>'. $content;
+        $content .= '</Journey>';
+        $content = '<?xml version="1.0" encoding="ISO-8859-1"?><Journey>'. $content;
         return $content;
     }
 

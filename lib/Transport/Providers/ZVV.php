@@ -10,8 +10,8 @@ class ZVV extends Provider
     public static function cleanRouteXML($content)
     {
         $content = parent::cleanRouteXML($content);
-        $content .= '</StJourney>';
-        $content = str_replace('?>', '?><StJourney>', $content);
+        $content .= '</Journey>';
+        $content = str_replace('?>', '?><Journey>', $content);
         return $content;
     }
 
