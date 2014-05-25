@@ -140,6 +140,9 @@ class Stop
         $obj->location = $station;
 
         $date = \DateTime::createFromFormat('d.m.y', (string)$xml['fpDate']);
+        if (!$date)
+            // Austrian OEBB format
+            $date = \DateTime::createFromFormat('d.m.Y', (string)$xml['fpDate']);
         $obj->departure = self::calculateDateTime((string) $xml['fpTime'], $date);
         $delay = (int)$xml['e_delay'];
 
