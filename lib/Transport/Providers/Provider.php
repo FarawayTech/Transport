@@ -29,7 +29,7 @@ class Provider
             if($locality=='Berlin')
                 $provider = new VBB();
         } else if ($country=='AT') {
-            $provider = new OEBB();
+            //$provider = new OEBB();
         }
         return $provider;
     }
