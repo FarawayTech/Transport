@@ -51,7 +51,16 @@ class API
 
         $query->addProvider($this->provider);
 
-        return $this->browser->post($query->getQueryURL(), $headers, $query->toXml());
+        $i = 5;
+        $statusCode = 0;
+        $response = null;
+        // try 5 times
+        while ($i>0 and $statusCode!=200) {
+            $response = $this->browser->post($query->getQueryURL(), $headers, $query->toXml());
+            $statusCode = $response->getStatusCode();
+            $i--;
+        }
+        return $response;
     }
 
     /**
