@@ -1,7 +1,7 @@
 <?php
 
 // Debug
-$app['debug'] = true;
+$app['debug'] = false;
 
 // HTTP Cache
 $app['http_cache'] = true;
