@@ -207,6 +207,10 @@ class Journey
                         $obj->subcategory = (string) $journeyAttribute->Attribute->AttributeVariant->Text;
                         break;
                     case 'NUMBER':
+                        if (!$obj->number)
+                            $obj->number = (string) $journeyAttribute->Attribute->AttributeVariant->Text;
+                        break;
+                    case 'LINE':
                         $obj->number = (string) $journeyAttribute->Attribute->AttributeVariant->Text;
                         break;
                     case 'OPERATOR':
