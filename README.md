@@ -12,12 +12,9 @@ Feel free to fork this project implement your own ideas or send pull requests.
 $ git checkout master
 $ git fetch upstream
 $ git merge upstream/master
-$ git checkout heroku
-$ git merge master
-$ rm -rf vendor
-$ php composer.phar install --prefer-dist
-$ git push heroku heroku:master
-$ git push pagoda master
+$ git push heroku master
+$ git push heroku-prod
+$ git push pagoda
 ```
 
 ## Installation
