@@ -166,11 +166,9 @@ class Journey
 
     static public function resolveNumber(Journey $obj)
     {
-        if (in_array($obj->shortCategory, array_keys(self::$SHORT_CAT_EXCLUDES))) {
-            if (strlen($obj->number) <= 3) {
-                $obj->category = self::$SHORT_CAT_EXCLUDES[$obj->shortCategory];
-                return $obj->number;
-            }
+        if (in_array($obj->shortCategory, array_keys(self::$SHORT_CAT_EXCLUDES)) && strlen($obj->number) <= 3) {
+            $obj->category = self::$SHORT_CAT_EXCLUDES[$obj->shortCategory];
+            return $obj->number;
         }
         // Handle S and U
         if (in_array($obj->shortCategory, self::$SUB_CAT_EXCLUDES) && strlen($obj->number) <= 2){
