@@ -20,7 +20,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "~5.5.0"
+                "php": ">=5.2.0"
             },
             "type": "library",
             "autoload": {
@@ -1143,7 +1143,7 @@
         "facebook/xhprof": 20
     },
     "platform": {
-        "php": ">= 5.3.2"
+        "php": "~5.5.0"
     },
     "platform-dev": [
 
