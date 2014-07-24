@@ -38,12 +38,15 @@ class Statistics {
         $this->count('stats:resources', $path, array('path' => $path));
     }
 
-    protected function nameNumber($name, $number, $category, $shortCategory) {
+    protected function nameNumber($name, $number, $journey) {
+        $shortCategory = $journey->shortCategory;
         if ($shortCategory == 'B' || $shortCategory == 'T')
             return;
+        if ($shortCategory == 'S')
+            $shortCategory .= ';'.$journey->to;
         if ($this->redis) {
             $key = "stats:namenumbers:$number";
-            $this->redis->sadd($key, $name.';'.$shortCategory.';'.$category);
+            $this->redis->sadd($key, $name.';'.$shortCategory);
             $this->redis->sadd("stats:namenumbers", $key);
         }
     }
@@ -92,7 +95,7 @@ class Statistics {
         foreach ($stationboard as $journey) {
             $name = preg_replace('/\d/', '$', $journey->name);
             $number = preg_replace('/\d/', '$', $journey->resolvedNumber);
-            $this->nameNumber($name, $number, $journey->category, $journey->shortCategory);
+            $this->nameNumber($name, $number, $journey);
         }
 
     }
