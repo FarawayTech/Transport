@@ -39,14 +39,9 @@ class Statistics {
     }
 
     protected function nameNumber($name, $number, $journey) {
-        $shortCategory = $journey->shortCategory;
-        if ($shortCategory == 'B' || $shortCategory == 'T')
-            return;
-        if ($shortCategory == 'S')
-            $shortCategory .= ';'.$journey->to;
         if ($this->redis) {
             $key = "stats:namenumbers:$number";
-            $this->redis->sadd($key, $name.';'.$shortCategory);
+            $this->redis->sadd($key, $name.';'.$journey->shortCategory.';'.$journey->category);
             $this->redis->sadd("stats:namenumbers", $key);
         }
     }
