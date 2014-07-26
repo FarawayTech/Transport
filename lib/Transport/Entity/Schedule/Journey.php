@@ -288,6 +288,12 @@ class Journey
                 $obj->number = $obj->category;
         }
 
+        // handle compound numbers
+        $num_parts = explode(' ', $obj->number);
+        if (sizeof($num_parts) > 1) {
+            $obj->number = $num_parts[1];
+        }
+
         // -- resolve shortCategory
         if ($class)
             $obj->shortCategory = $provider::intToProduct($class);
