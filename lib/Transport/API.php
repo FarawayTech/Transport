@@ -55,10 +55,15 @@ class API
         $statusCode = 0;
         $response = null;
         // try 5 times
-        while ($i>0 and $statusCode!=200) {
+        while ($i > 0 and $statusCode != 200) {
             $response = $this->browser->post($query->getQueryURL(), $headers, $query->toXml());
             $statusCode = $response->getStatusCode();
             $i--;
+        }
+
+        if ($statusCode == 500)
+        {
+            error_log($response->getContent(), 3, "sbb_api_errors.txt");
         }
         return $response;
     }
