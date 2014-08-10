@@ -61,7 +61,7 @@ class API
             $i--;
         }
 
-        if ($statusCode == 500)
+        if ($statusCode == 200)
         {
             error_log($response->getContent(), 3, "sbb_api_errors.txt");
         }
