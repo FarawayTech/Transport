@@ -60,11 +60,6 @@ class API
             $statusCode = $response->getStatusCode();
             $i--;
         }
-
-        if ($statusCode == 500)
-        {
-            error_log($response->getContent());
-        }
         return $response;
     }
 
@@ -187,12 +182,18 @@ class API
     {
         $provider = $this->provider;
         $query->addProvider($provider);
+        $journeys = array();
         // send request
         if ($query->isExtXML())
         {
             $response = $this->sendQuery($query);
-            $result = simplexml_load_string($response->getContent());
-            $journeys = StationBoardJourney::createListFromXml($result, $query->date, $provider);
+            try {
+                $result = simplexml_load_string($response->getContent());
+                $journeys = StationBoardJourney::createListFromXml($result, $query->date, $provider);
+            }
+            catch (\Exception $e) {
+                error_log($response->getContent());
+            }
         }
         else {
             $url = $query->getQueryURL() . '?' . http_build_query($query->toArray());
