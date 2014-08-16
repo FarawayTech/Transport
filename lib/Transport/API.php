@@ -49,16 +49,22 @@ class API
         $headers[] = 'Accept: application/xml';
         $headers[] = 'Content-Type: application/xml';
 
-        $query->addProvider($this->provider);
-
-        $i = 5;
-        $statusCode = 0;
         $response = null;
-        // try 5 times
-        while ($i > 0 and $statusCode != 200) {
-            $response = $this->browser->post($query->getQueryURL(), $headers, $query->toXml());
-            $statusCode = $response->getStatusCode();
-            $i--;
+        try {
+            $query->addProvider($this->provider);
+
+            $i = 5;
+            $statusCode = 0;
+            $response = null;
+            // try 5 times
+            while ($i > 0 and $statusCode != 200) {
+                $response = $this->browser->post($query->getQueryURL(), $headers, $query->toXml());
+                $statusCode = $response->getStatusCode();
+                $i--;
+            }
+        }
+        catch (\Exception $e) {
+            error_log($e->getMessage());
         }
         return $response;
     }
@@ -182,18 +188,12 @@ class API
     {
         $provider = $this->provider;
         $query->addProvider($provider);
-        $journeys = array();
         // send request
         if ($query->isExtXML())
         {
             $response = $this->sendQuery($query);
-            try {
-                $result = simplexml_load_string($response->getContent());
-                $journeys = StationBoardJourney::createListFromXml($result, $query->date, $provider);
-            }
-            catch (\Exception $e) {
-                error_log($response->getContent());
-            }
+            $result = simplexml_load_string($response->getContent());
+            $journeys = StationBoardJourney::createListFromXml($result, $query->date, $provider);
         }
         else {
             $url = $query->getQueryURL() . '?' . http_build_query($query->toArray());
