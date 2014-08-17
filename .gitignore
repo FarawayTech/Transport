@@ -3,3 +3,4 @@ var/logs/
 var/xhprof/
 vendor/
 .idea/
+composer.phar
