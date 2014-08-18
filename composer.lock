@@ -1164,7 +1164,7 @@
     },
     "prefer-stable": false,
     "platform": {
-        "php": "~5.5.0"
+        "php": ">=5.4.0"
     },
     "platform-dev": [
 
