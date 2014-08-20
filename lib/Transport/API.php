@@ -3,6 +3,7 @@
 namespace Transport;
 
 use Buzz\Browser;
+use Buzz\Client\Curl;
 use Transport\Entity\Location\Station;
 use Transport\Entity\Schedule\Route;
 use Transport\Entity\Schedule\StationBoardJourney;
@@ -34,7 +35,7 @@ class API
 
     public function __construct(Provider $provider, Browser $browser = null, $lang = 'EN')
     {
-        $this->browser = $browser ?: new Browser();
+        $this->browser = $browser ?: new Browser(new Curl());
         $this->lang = $lang;
         $this->provider = $provider;
     }
