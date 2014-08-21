@@ -35,7 +35,9 @@ class API
 
     public function __construct(Provider $provider, Browser $browser = null, $lang = 'EN')
     {
-        $this->browser = $browser ?: new Browser(new Curl());
+        $client = new Curl();
+        $client->setTimeout(2);
+        $this->browser = $browser ?: new Browser($client);
         $this->lang = $lang;
         $this->provider = $provider;
     }
