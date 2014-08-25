@@ -36,7 +36,7 @@ class API
     public function __construct(Provider $provider, Browser $browser = null, $lang = 'EN')
     {
         $client = new Curl();
-        $client->setTimeout(2);
+        $client->setIgnoreErrors(false);
         $this->browser = $browser ?: new Browser($client);
         $this->lang = $lang;
         $this->provider = $provider;
@@ -53,21 +53,21 @@ class API
         $headers[] = 'Content-Type: application/xml';
 
         $response = null;
-        try {
-            $query->addProvider($this->provider);
+        $query->addProvider($this->provider);
 
-            $i = 5;
-            $statusCode = 0;
-            $response = null;
-            // try 5 times
-            while ($i > 0 and $statusCode != 200) {
+        $i = 5;
+        $statusCode = 0;
+        $response = null;
+        // try 5 times
+        while ($i > 0 and $statusCode != 200) {
+            try {
                 $response = $this->browser->post($query->getQueryURL(), $headers, $query->toXml());
                 $statusCode = $response->getStatusCode();
-                $i--;
             }
-        }
-        catch (\Exception $e) {
-            error_log($e->getMessage());
+            catch (\Exception $e) {
+                error_log($e->getMessage());
+            }
+            $i--;
         }
         return $response;
     }
