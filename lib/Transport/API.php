@@ -58,6 +58,7 @@ class API
         $i = 5;
         $statusCode = 0;
         $response = null;
+        $this->browser->getClient()->setTimeout(3);
         // try 5 times
         while ($i > 0 and $statusCode != 200) {
             try {
