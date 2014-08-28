@@ -3,7 +3,6 @@
 namespace Transport;
 
 use Buzz\Browser;
-use Buzz\Client\Curl;
 use Transport\Entity\Location\Station;
 use Transport\Entity\Schedule\Route;
 use Transport\Entity\Schedule\StationBoardJourney;
@@ -35,9 +34,7 @@ class API
 
     public function __construct(Provider $provider, Browser $browser = null, $lang = 'EN')
     {
-        $client = new Curl();
-        $client->setIgnoreErrors(false);
-        $this->browser = $browser ?: new Browser($client);
+        $this->browser = $browser ?: new Browser();
         $this->lang = $lang;
         $this->provider = $provider;
     }
@@ -58,10 +55,10 @@ class API
         $i = 5;
         $statusCode = 0;
         $response = null;
-        $this->browser->getClient()->setTimeout(3);
         // try 5 times
         while ($i > 0 and $statusCode != 200) {
             try {
+                //'http://localhost:8080/timeout.php?seconds=10'
                 $response = $this->browser->post($query->getQueryURL(), $headers, $query->toXml());
                 $statusCode = $response->getStatusCode();
             }
