@@ -45,6 +45,7 @@ class API
     public function findConnections(ConnectionQuery $query)
     {
         // send request
+        $query->addProvider($this->provider);
         $response = Query::sendQuery($this->browser, $query);
 
         // parse result
@@ -55,6 +56,7 @@ class API
 
             // load next page
             $pageQuery = new ConnectionPageQuery($query, (string) $result->ConRes->ConResCtxt);
+            $pageQuery->addProvider($this->provider);
             $response = Query::sendQuery($this->browser, $pageQuery);
 
             $result = simplexml_load_string($response->getContent());
@@ -77,6 +79,7 @@ class API
     public function findLocations(LocationQuery $query)
     {
         // send request
+        $query->addProvider($this->provider);
         $response = Query::sendQuery($this->browser, $query);
 
         // parse result
