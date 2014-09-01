@@ -2,11 +2,13 @@
 
 namespace Transport\Entity\Schedule;
 
+use Buzz\Browser;
 use Transport\Entity\Query;
 use Transport\Entity\Location\Station;
 use Transport\Entity\Transportations;
+use Transport\ISendQuery;
 
-class RouteQuery extends Query
+class RouteQuery extends Query implements ISendQuery
 {
     public $boardType = 'DEP';
 
@@ -72,5 +74,15 @@ class RouteQuery extends Query
             'dirInput' => $jhandle_arr[1],
             'inputTripelId' => 'L='.$this->station->id
         );
+    }
+
+    public function __sendQuery(Browser $browser)
+    {
+        if ($this->supportsExtXML)
+            return parent::__sendQuery($browser);
+        else {
+            $url = $this->getQueryURL() . '?' . http_build_query($this->toArray());
+            return $browser->get($url);
+        }
     }
 }

@@ -4,10 +4,10 @@ namespace Transport;
 
 use Buzz\Browser;
 use Transport\Entity\Location\Station;
+use Transport\Entity\Query;
 use Transport\Entity\Schedule\Route;
 use Transport\Entity\Schedule\StationBoardJourney;
 use Transport\Providers\Provider;
-use Transport\Entity\Query;
 use Transport\Entity\Location\LocationQuery;
 use Transport\Entity\Location\NearbyQuery;
 use Transport\Entity\Schedule\ConnectionQuery;
@@ -18,7 +18,7 @@ use Transport\Entity\Schedule\StationBoardQuery;
 class API
 {
     /**
-     * @var Buzz\Browser
+     * @var Browser
      */
     protected $browser;
 
@@ -38,38 +38,6 @@ class API
         $this->lang = $lang;
         $this->provider = $provider;
     }
-
-    /**
-     * @return Buzz\Message\Response
-     */
-    public function sendQuery(Query $query)
-    {
-        $headers = array();
-        $headers[] = 'User-Agent: SBBMobile/4.8 CFNetwork/609.1.4 Darwin/13.0.0';
-        $headers[] = 'Accept: application/xml';
-        $headers[] = 'Content-Type: application/xml';
-
-        $response = null;
-        $query->addProvider($this->provider);
-
-        $i = 5;
-        $statusCode = 0;
-        $response = null;
-        // try 5 times
-        while ($i > 0 and $statusCode != 200) {
-            try {
-                //'http://localhost:8080/timeout.php?seconds=10'
-                $response = $this->browser->post($query->getQueryURL(), $headers, $query->toXml());
-                $statusCode = $response->getStatusCode();
-            }
-            catch (\Exception $e) {
-                error_log($e->getMessage());
-            }
-            $i--;
-        }
-        return $response;
-    }
-
     /**
      * @param ConnectionQuery $query
      * @return array
@@ -77,7 +45,7 @@ class API
     public function findConnections(ConnectionQuery $query)
     {
         // send request
-        $response = $this->sendQuery($query);
+        $response = Query::sendQuery($this->browser, $query);
 
         // parse result
         $result = simplexml_load_string($response->getContent());
@@ -87,8 +55,7 @@ class API
 
             // load next page
             $pageQuery = new ConnectionPageQuery($query, (string) $result->ConRes->ConResCtxt);
-
-            $response = $this->sendQuery($pageQuery);
+            $response = Query::sendQuery($this->browser, $pageQuery);
 
             $result = simplexml_load_string($response->getContent());
         }
@@ -110,7 +77,7 @@ class API
     public function findLocations(LocationQuery $query)
     {
         // send request
-        $response = $this->sendQuery($query);
+        $response = Query::sendQuery($this->browser, $query);
 
         // parse result
         $result = simplexml_load_string($response->getContent());
@@ -148,18 +115,16 @@ class API
      */
     public function findNearbyLocations(NearbyQuery $query)
     {
-        $url = $this->provider->URL_QUERY . '?' . http_build_query($query->toArray());
-
-        // send request
-        $response = $this->browser->get($url);
-
-        // fix broken JSON
+        $query->addProvider($this->provider);
+        $response = Query::sendQuery($this->browser, $query);
         $content = $response->getContent();
+
         // check if we need to decode
         $charset = $response->getHeaderAttribute('content-type', 'charset');
         if ($charset == 'ISO-8859-1')
             $content = utf8_encode($content);
 
+        // fix broken JSON
         $content = preg_replace('/(\w+) ?:/i', '"\1":', $content);
         $content = str_replace("\\'", "'", $content);
 
@@ -189,17 +154,13 @@ class API
     {
         $provider = $this->provider;
         $query->addProvider($provider);
-        // send request
+        $response = Query::sendQuery($this->browser, $query);
         if ($query->isExtXML())
         {
-            $response = $this->sendQuery($query);
             $result = simplexml_load_string($response->getContent());
             $journeys = StationBoardJourney::createListFromXml($result, $query->date, $provider);
         }
         else {
-            $url = $query->getQueryURL() . '?' . http_build_query($query->toArray());
-            // send request
-            $response = $this->browser->get($url);
             $result = simplexml_load_string($provider::cleanStbXML($response->getContent()));
             $journeys = StationBoardJourney::createListFromStbXml($result, $station, $provider);
         }
@@ -212,15 +173,12 @@ class API
     {
         $provider = $this->provider;
         $query->addProvider($provider);
+        $response = Query::sendQuery($this->browser, $query);
         if ($query->isExtXML())
         {
-            $response = $this->sendQuery($query);
             $content = $response->getContent();
         }
         else {
-            $url = $query->getQueryURL() . '?' . http_build_query($query->toArray());
-            // send request
-            $response = $this->browser->get($url);
             $content = $provider::cleanRouteXML($response->getContent());
         }
 

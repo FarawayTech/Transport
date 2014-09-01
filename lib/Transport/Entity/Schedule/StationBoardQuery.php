@@ -2,6 +2,8 @@
 
 namespace Transport\Entity\Schedule;
 
+use Buzz\Browser;
+use Buzz\Message\Response;
 use Transport\Entity\Query;
 use Transport\Entity\Transportations;
 use Transport\Entity\Location\Station;
@@ -12,13 +14,9 @@ class StationBoardQuery extends Query
      * @var Station
      */
     public $station;
-
     public $boardType = 'DEP';
-
     public $maxJourneys = 40;
-
     public $date;
-
     public $transportations = array('all');
 
     public function __construct(Station $station, \DateTime $date = null)
@@ -74,5 +72,16 @@ class StationBoardQuery extends Query
             'productsFilter' => Transportations::reduceTransportations($this->transportations)
         );
     }
+
+    public function __sendQuery(Browser $browser)
+    {
+        if ($this->supportsExtXML)
+            return parent::__sendQuery($browser);
+        else {
+            $url = $this->getQueryURL() . '?' . http_build_query($this->toArray());
+            return $browser->get($url);
+        }
+    }
+
 
 }
