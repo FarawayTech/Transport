@@ -53,6 +53,7 @@ class NearbyQuery implements ISendQuery
         {
             // send request to mongo
             $m = new MongoClient($this->provider->MONGO_URL);
+            $m->selectDB("cc_DYGdzXUnNrOg");
             $result = $m->ch_stops->find(Array('loc' => Array('$nearSphere' => Array('$geometry' =>
             Array('type'=>'Point', 'coordinates' => Array($this->lon, $this->lat))))))->limit($this->limit);
             var_dump($result);
