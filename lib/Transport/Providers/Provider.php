@@ -12,11 +12,17 @@ class Provider
     public $API_VERSION = '1.1';
     public $ACCESS_ID;
 
+    public $MONGO_URL;
+
     const SEARCH_MODE_NORMAL = 'N';
     const SEARCH_MODE_ECONOMIC = 'P';
 
     public static $DEST_ATTR1 = 'dir';
     public static $DEST_ATTR2 = 'targetLoc';
+
+    public static function isNearByLocal() {
+        return false;
+    }
 
     public static function getProvider($country, $area, $locality)
     {

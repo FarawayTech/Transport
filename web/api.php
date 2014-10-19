@@ -30,7 +30,8 @@ $app['http_cache'] = false;
 $app['buzz.client'] = null;
 $app['monolog.level'] = Monolog\Logger::ERROR;
 $app['xhprof'] = false;
-$app['redis.config'] = false; // array('host' => 'localhost', 'port' => 6379);
+$app['redis.config'] = false;
+$app['mongo.config'] = false;
 $app['proxy'] = false;
 
 /// load config
@@ -64,6 +65,7 @@ $app->before(function (Request $request) use ($app) {
 $app->before(function (Request $request) use ($app) {
     // get correct provider
     $provider = \Transport\Providers\Provider::getProvider($request->get('country'), $request->get('area'), $request->get('locality'));
+    $provider->MONGO_URL = $app['mongo.config'];
 
     // create Transport API
     $app['api'] = new Transport\API($provider, new Buzz\Browser($app['buzz.client']));
