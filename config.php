@@ -30,10 +30,10 @@ if (isset($_ENV['PROD'])){
     );
     $app['mongo.config'] = $_ENV['MONGOSOUP_URL'];
 }
-else
+else {
     $app['redis.config'] = array('host' => 'localhost', 'port' => 6379);
-    $app['mongo.config'] = 'mongodb://localhost:60789/test'
-;
+    $app['mongo.config'] = 'mongodb://localhost:60789/test';
+}
 
 // if hosted behind a reverse proxy
 $app['proxy'] = false;
