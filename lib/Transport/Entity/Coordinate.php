@@ -68,15 +68,15 @@ class Coordinate
      * Calculates the distance to another coordinate using the Haversine Formula.
      * Not really accurate.
      */
-    public function getDistanceTo($lat, $lon)
+    public function getDistanceTo($lon, $lat)
     {
         $earth_radius = 6371;
 
-        $dLat = deg2rad($this->y - $lat);
-        $dLon = deg2rad($this->x - $lon);  
+        $dLon = deg2rad($this->y - $lon);
+        $dLat = deg2rad($this->x - $lat);
 
-        $a = sin($dLat/2) * sin($dLat/2) + cos(deg2rad($lat)) * cos(deg2rad($this->y)) * sin($dLon/2) * sin($dLon/2);  
-        $c = 2 * asin(sqrt($a));
+        $a = sin($dLat/2) * sin($dLat/2) + cos(deg2rad($lat)) * cos(deg2rad($this->x)) * sin($dLon/2) * sin($dLon/2);
+        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
         $d = $earth_radius * $c;
 
         return round($d*1000, 1);
