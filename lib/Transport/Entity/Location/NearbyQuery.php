@@ -4,7 +4,6 @@ namespace Transport\Entity\Location;
 
 use Buzz\Browser;
 use Buzz\Message\Response;
-use MongoClient;
 use Transport\Entity\Coordinate;
 use Transport\ISendQuery;
 use Transport\Providers\Provider;
@@ -49,19 +48,8 @@ class NearbyQuery implements ISendQuery
      */
     public function __sendQuery(Browser $browser)
     {
-        if ($this->provider->isNearByLocal() && $this->provider->MONGO_URL)
-        {
-            // send request to mongo
-            $m = new MongoClient($this->provider->MONGO_URL);
-            $collection = $m->selectDB("cc_DYGdzXUnNrOg")->selectCollection("ch_stops");
-            $result = $collection->find(Array('loc' => Array('$nearSphere' => Array('$geometry' =>
-            Array('type'=>'Point', 'coordinates' => Array($this->lon, $this->lat))))))->limit($this->limit);
-            var_dump($result);
-        }
-        else {
-            $url = $this->provider->URL_QUERY . '?' . http_build_query($this->toArray());
-            // send request
-            return $browser->get($url);
-        }
+        $url = $this->provider->URL_QUERY . '?' . http_build_query($this->toArray());
+        // send request
+        return $browser->get($url);
     }
 }

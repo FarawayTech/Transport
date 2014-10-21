@@ -1,6 +1,7 @@
 <?php
 
 namespace Transport\Entity\Location;
+use Transport\Entity\Coordinate;
 
 /**
  * Represents a station we received as response
@@ -16,6 +17,7 @@ class Station extends Location
     
     public function __construct($id = null) {
         $this->id = $id;
+        $this->coordinate = new Coordinate();
     }
 
     /**
