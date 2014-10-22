@@ -32,7 +32,7 @@ if (isset($_ENV['PROD'])){
 }
 else {
     $app['redis.config'] = array('host' => 'localhost', 'port' => 6379);
-    $app['mongo.config'] = 'mongodb://localhost:60789/test';
+    $app['mongo.config'] = 'mongodb://localhost:27017/test';
 }
 
 // if hosted behind a reverse proxy
