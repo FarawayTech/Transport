@@ -31,9 +31,9 @@ class LocationFactory
         $stations = array();
         foreach ($cursor as $result) {
             $station = new Station($result['stop_id']);
-            $station->name = $result['stop_name'];
-            $station->coordinate->x = $result['stop_lat'];
-            $station->coordinate->y = $result['stop_lon'];
+            $station->name = $result['canonical_name'];
+            $station->coordinate->x = $result['location']['coordinates'][1];
+            $station->coordinate->y = $result['location']['coordinates'][0];
             $station->coordinate->type = 'WGS84';
             $station->distance = $station->coordinate->getDistanceTo($lon, $lat);
             $stations[] = $station;
