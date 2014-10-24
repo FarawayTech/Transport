@@ -51,7 +51,7 @@ for row in reader:
             if name.lower() not in names_set:
                 names.append(name.lower())
                 names_set.add(name.lower())
-    station['names'] = ' '.join(names)
+    station['names'] = names
 
     # create text field for station name prefixes
     names_set = set()
@@ -62,7 +62,7 @@ for row in reader:
             if prefix_name not in names_set:
                 prefix_names.append(prefix_name)
                 names_set.add(prefix_name)
-    station['prefix_names'] = ' '.join(prefix_names)
+    station['prefix_names'] = prefix_names
 
     stations.append(station)
 
@@ -75,7 +75,7 @@ from pymongo import MongoClient
 import pymongo
 client = MongoClient()
 db = client['test']
-if 'ch_stops' in db.collection_names():
-    db.drop_collection('ch_stops')
-subprocess.call(["mongoimport -c ch_stops --file temp_import/stops.json --jsonArray"], shell=True)
+if 'stops' in db.collection_names():
+    db.drop_collection('stops')
+subprocess.call(["mongoimport -c stops --file temp_import/stops.json --jsonArray"], shell=True)
 subprocess.call(['mongo mongo_index.js'], shell=True)
