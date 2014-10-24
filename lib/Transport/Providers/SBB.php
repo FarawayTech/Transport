@@ -12,7 +12,7 @@ class SBB extends Provider
     public $SEC_ACCESS_ID = 'YJpyuPISerpXNNRTo50fNMP0yVu7L6IMuOaBgS0Xz89l3f6I3WhAjnto4kS9oz1';
 
     public static function isNearByLocal() {
-        return false;
+        return true;
     }
 
     public static function getShortCategory($category)

@@ -8,6 +8,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\HttpKernel\Debug\ErrorHandler;
 
+use Transport\DB;
 use Transport\Entity\Location\Station;
 use Transport\Entity\Location\LocationQuery;
 use Transport\Entity\Location\NearbyQuery;
@@ -64,11 +65,10 @@ $app->before(function (Request $request) use ($app) {
 
 $app->before(function (Request $request) use ($app) {
     // get correct provider
-    $provider = \Transport\Providers\Provider::getProvider($request->get('country'), $request->get('area'), $request->get('locality'));
-    $provider->MONGO_URL = $app['mongo.config'];
+    $app['provider'] = \Transport\Providers\Provider::getProvider($request->get('country'), $request->get('area'), $request->get('locality'));
 
     // create Transport API
-    $app['api'] = new Transport\API($provider, new Buzz\Browser($app['buzz.client']));
+    $app['api'] = new Transport\API($app['provider'], new Buzz\Browser($app['buzz.client']));
 });
 
 // XHProf
@@ -129,19 +129,31 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
 
     $stations = array();
 
-    $x = $request->get('x') ?: null;
-    $y = $request->get('y') ?: null;
-    $limit = $request->get('limit') ?: null;
-    if ($x && $y) {
-        // TODO: filter stations with the same name (ZVV)
-        $query = new NearbyQuery($x, $y, $limit);
-        $stations = $app['api']->findNearbyLocations($query);
-    }
-
+    $lat = $request->get('x') ?: null;
+    $lon = $request->get('y') ?: null;
+    $limit = $request->get('limit') ?: 10;
     $query = $request->get('query');
+
     if ($query) {
-        $query = new LocationQuery($query, $request->get('type'));
-        $stations = $app['api']->findLocations($query);
+        if ($lat && $lon && $app['provider']->isNearByLocal() && $app['mongo.config']) {
+            // query mongo with nearest stop search
+            $stations = DB::findNearbyLocationsQuery($query, $lon, $lat, $limit, $app['mongo.config']);
+        }
+        else{
+            $query = new LocationQuery($query, $request->get('type'));
+            $stations = $app['api']->findLocations($query);
+        }
+    }
+    else if ($lat && $lon) {
+        if ($app['provider']->isNearByLocal() && $app['mongo.config'])
+        {
+            $stations = DB::findNearbyLocations($lon, $lat, $limit, $app['mongo.config']);
+        }
+        else {
+            // TODO: filter stations with the same name (ZVV)
+            $query = new NearbyQuery($lat, $lon, $limit);
+            $stations = $app['api']->findNearbyLocations($query);
+        }
     }
 
     $result = array('stations' => $stations);
