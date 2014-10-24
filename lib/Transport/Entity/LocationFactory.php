@@ -27,16 +27,20 @@ class LocationFactory
         return Location\Station::createFromJson($json);
     }
 
+    static public function createFromMongoRow($result, $lon, $lat) {
+        $station = new Station($result['stop_id']);
+        $station->name = $result['canonical_name'];
+        $station->coordinate->x = $result['location']['coordinates'][1];
+        $station->coordinate->y = $result['location']['coordinates'][0];
+        $station->coordinate->type = 'WGS84';
+        $station->distance = $station->coordinate->getDistanceTo($lon, $lat);
+        return $station;
+    }
+
     static public function createFromMongoCursor(\MongoCursor $cursor, $lon, $lat) {
         $stations = array();
         foreach ($cursor as $result) {
-            $station = new Station($result['stop_id']);
-            $station->name = $result['canonical_name'];
-            $station->coordinate->x = $result['location']['coordinates'][1];
-            $station->coordinate->y = $result['location']['coordinates'][0];
-            $station->coordinate->type = 'WGS84';
-            $station->distance = $station->coordinate->getDistanceTo($lon, $lat);
-            $stations[] = $station;
+            $stations[] = self::createFromMongoRow($result, $lon, $lat);
         }
         return $stations;
     }
