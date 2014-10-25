@@ -34,7 +34,7 @@ class DB {
             $heap->insert(LocationFactory::createFromMongoRow($result, $lon, $lat));
         }
         // heap is already an iterable, just return
-        return $heap;
+        return array_reverse(iterator_to_array($heap));
     }
 
     private static function processQuery($query) {
@@ -94,7 +94,7 @@ class DB {
         }
         else {
             // sort $prefix_cursor by distance and get limit, merge with $stations
-            return array_merge($stations, iterator_to_array(self::getMinDistanceFromCursor($prefix_cursor, $lon, $lat, $limit)));
+            return array_merge($stations, self::getMinDistanceFromCursor($prefix_cursor, $lon, $lat, $limit));
         }
 
     }
