@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# mongo_import.py SERVER_ADDRESS DB_NAME USER PASSWORD
 
 import csv
 import json
@@ -6,12 +7,14 @@ import subprocess
 import os
 import re
 import unicodedata
-
+import sys
 
 def strip_accents(s):
     s = s.decode('utf-8')
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
+
+SRV_ADDR, DB_NAME, USER, PSWD = sys.argv[1:]
 
 REPLACE_PUNCT = re.compile(r'[.()/,\-&]')
 STATION_NAMES = 'stop_name,ch_station_long_name,ch_station_synonym1,ch_station_synonym2,ch_station_synonym3,ch_station_synonym4'.split(',')
@@ -77,5 +80,6 @@ client = MongoClient()
 db = client['test']
 if 'stops' in db.collection_names():
     db.drop_collection('stops')
-subprocess.call(["mongoimport -c stops --file temp_import/stops.json --jsonArray"], shell=True)
-subprocess.call(['mongo mongo_index.js'], shell=True)
+#
+subprocess.call(["mongoimport -h {0} -d {1} -u {2} -p {3} -c stops --file temp_import/stops.json --jsonArray".format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
+subprocess.call(['mongo -u {2} -p {3} {0}/{1} mongo_index.js'.format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
