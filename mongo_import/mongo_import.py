@@ -82,5 +82,5 @@ if 'stops' in db.collection_names():
     db.drop_collection('stops')
 #
 client.close()
-subprocess.call(["mongoimport -h {0} -d {1} -c stops --file temp_import/stops.json --jsonArray".format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
-subprocess.call(['mongo {0}/{1} mongo_index.js'.format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
+subprocess.call(["mongoimport -h {0} -d {1} -u {2} -p {3} -c stops --file temp_import/stops.json --jsonArray".format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
+subprocess.call(['mongo {0}/{1} -u {2} -p {3} mongo_index.js'.format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
