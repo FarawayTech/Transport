@@ -60,7 +60,7 @@ for row in reader:
     names_set = set()
     prefix_names = []
     for name in names:
-        for i in range(2, len(name)+1):
+        for i in range(1, len(name)+1):
             prefix_name = name[:i]
             if prefix_name not in names_set:
                 prefix_names.append(prefix_name)
