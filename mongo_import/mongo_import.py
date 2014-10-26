@@ -77,9 +77,10 @@ out.close()
 from pymongo import MongoClient
 import pymongo
 client = MongoClient()
-db = client['test']
+db = client[DB_NAME]
 if 'stops' in db.collection_names():
     db.drop_collection('stops')
 #
-subprocess.call(["mongoimport -h {0} -d {1} -u {2} -p {3} -c stops --file temp_import/stops.json --jsonArray".format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
-subprocess.call(['mongo -u {2} -p {3} {0}/{1} mongo_index.js'.format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
+client.close()
+subprocess.call(["mongoimport -h {0} -d {1} -c stops --file temp_import/stops.json --jsonArray".format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
+subprocess.call(['mongo {0}/{1} mongo_index.js'.format(SRV_ADDR, DB_NAME, USER, PSWD)], shell=True)
