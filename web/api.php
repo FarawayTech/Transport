@@ -132,7 +132,7 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
     $lat = $request->get('x') ?: null;
     $lon = $request->get('y') ?: null;
     $limit = $request->get('limit') ?: 10;
-    $query = $request->get('query');
+    $query = trim($request->get('query'));
 
     if ($query) {
         if ($lat && $lon && $app['provider']->isNearByLocal() && $app['mongo.config']) {
