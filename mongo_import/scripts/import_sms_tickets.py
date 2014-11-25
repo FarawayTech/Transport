@@ -20,13 +20,13 @@ def main_import(srv_addr, db_name):
             location[key] = value
         if not location:
             continue
-        sms_number = location['sms_number']
-        if sms_number in sms_locations:
-            sms_location = sms_locations[sms_number]
+        main_code = location['main_code']
+        if main_code in sms_locations:
+            sms_location = sms_locations[main_code]
         else:
             location['localities'] = []
             sms_location = location
-            sms_locations[sms_number] = sms_location
+            sms_locations[main_code] = sms_location
         sms_location['localities'].append({'name': location.pop('locality'), 'zone': location.pop('zone')})
 
 
