@@ -21,10 +21,11 @@ def main_import(srv_addr, db_name):
         pass
     print "Downloading stops.csv"
     subprocess.call(["curl http://gtfs.geops.ch/dl/complete/stops.txt > temp_import/stops.csv"], shell=True)
+    subprocess.call(["cat temp_import/stops.csv | sort -r -k1,1 -t',' > temp_import/stops_sorted.csv"], shell=True)
 
 
     print "Converting to json"
-    f = open('temp_import/stops.csv')
+    f = open('temp_import/stops_sorted.csv')
     reader = csv.reader(f)
 
     headers = reader.next()
