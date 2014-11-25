@@ -131,7 +131,7 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
 
     $lat = $request->get('x') ?: null;
     $lon = $request->get('y') ?: null;
-    $limit = $request->get('limit') ?: 10;
+    $limit = $request->get('limit') ?: 5;
     $query = trim($request->get('query'));
 
     if ($query) {
@@ -155,6 +155,9 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
             $stations = $app['api']->findNearbyLocations($query);
         }
     }
+
+    // add sms ticketing information
+    DB::populateSMSTicketing($stations, $app['mongo.config']);
 
     $result = array('stations' => $stations);
 

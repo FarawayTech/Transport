@@ -8,11 +8,12 @@ use SplMaxHeap;
 use Transport\Entity\LocationFactory;
 
 const COLLECTION = "stops";
+const SMS_COLLECTION = "sms_tickets";
 
 class DB {
 
-    private static function getCollection($config) {
-        return self::getDB($config)->selectCollection(COLLECTION);
+    private static function getCollection($config, $collection) {
+        return self::getDB($config)->selectCollection($collection);
     }
 
     private static function getDB($config) {
@@ -44,7 +45,7 @@ class DB {
     }
 
     public static function findNearbyLocations($lon, $lat, $limit, $config) {
-        $result = self::getCollection($config)->find(Array('location' => Array('$nearSphere' => Array('$geometry' =>
+        $result = self::getCollection($config, COLLECTION)->find(Array('location' => Array('$nearSphere' => Array('$geometry' =>
             Array('type'=>'Point', 'coordinates' => Array(floatval($lon), floatval($lat)),
                 // 10km max distance
                 '$maxDistance'=>10000)))))->limit(intval($limit));
@@ -54,7 +55,7 @@ class DB {
 
     public static function findNearbyLocationsQuery($query, $lon, $lat, $limit, $config) {
         $db = self::getDB($config);
-        $collection = self::getCollection($config);
+        $collection = self::getCollection($config, COLLECTION);
         $query = self::processQuery($query);
         $count = $db->command(array('collStats' => 'stops'))['count'];
         // find amount of full name stops
@@ -97,6 +98,22 @@ class DB {
             return array_merge($stations, self::getMinDistanceFromCursor($prefix_cursor, $lon, $lat, $limit));
         }
 
+    }
+
+    public static function populateSMSTicketing($stations, $config) {
+        $collection = self::getCollection($config, SMS_COLLECTION);
+        $cache = array();
+        foreach ($stations as $station) {
+            $main_name = explode(",", $station->name)[0];
+            if (array_key_exists($main_name, $cache))
+                $result = $cache[$main_name];
+            else
+                $result = $collection->findOne(array('localities.name' => $main_name), array('localities' => 0, '_id' => 0));
+            if ($result) {
+                $station->sms_ticket = $result;
+                $cache[$main_name] = $result;
+            }
+        }
     }
 
 }

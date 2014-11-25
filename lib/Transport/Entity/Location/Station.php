@@ -14,6 +14,7 @@ class Station extends Location
      * @var string
      */
     public $id;
+    public $sms_ticket;
     
     public function __construct($id = null) {
         $this->id = $id;
