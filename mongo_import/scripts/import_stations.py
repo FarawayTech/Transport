@@ -32,12 +32,13 @@ def main_import(srv_addr, db_name):
     station_ids = set()
 
     for row in reader:
-        station = {}
+        station = {'weight': 0}
         for key, value in zip(headers, row):
             if key=='stop_id':
                 value = value.split(':')[0]
             station[key] = value
         if station['stop_id'] in station_ids:
+            stations[-1]['weight'] += 1
             continue
         station_ids.add(station['stop_id'])
         station['location'] = {'type': 'Point', 'coordinates': [float(station.pop('stop_lon')), float(station.pop('stop_lat')) ]}
