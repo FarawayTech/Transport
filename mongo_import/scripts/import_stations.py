@@ -80,4 +80,5 @@ def main_import(srv_addr, db_name):
     db.stops.ensure_index([("location", pymongo.GEOSPHERE)])
     db.stops.ensure_index('names')
     db.stops.ensure_index('prefix_names')
+    db.stops.ensure_index('weight')
     client.close()
