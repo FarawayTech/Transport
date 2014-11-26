@@ -28,7 +28,7 @@ class Journey
                                                        '11' => 'ff0fa381')),
           'BulleJourney' => array('places' => array('Bulle', 'Morlon', 'Riaz', 'Vuadens', 'La Tour-de-Trême'),
                                   'colors' => array('201' => 'ffe31c19', '202' => 'ff27a143', '203' => 'ff0070b5')),
-          'GenevaJourney' => array('places' => array('Genève', 'Carouge GE', 'Veyrier', 'Bernex', 'Lancy',
+          'GenevaJourney' => array('places' => array('Genève', 'Genève-Aéroport', 'Carouge GE', 'Veyrier', 'Bernex', 'Lancy',
                                                      'Meyrin', 'Chêne-Bourg', 'Thônex', 'Grand-Saconnex', 'Vernier',
                                                      'Onex', 'Veigy', 'Neydens', 'Grand-Lancy', 'Jussy', 'Avusy',
                                                      'Confignon', 'Plan-les-Ouates', 'Satigny', 'Ferney', 'La Plaine'),
