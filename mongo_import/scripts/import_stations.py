@@ -47,30 +47,34 @@ def main_import(srv_addr, db_name):
         station['canonical_name'] = station['stop_name']
         
         # synonyms, used in weighted matching
-        station['synonyms'] = [station[syn_attr_name] for syn_attr_name in SYNONYMS]
+        station['synonyms'] = [station[syn_attr_name] for syn_attr_name in SYNONYMS if station[syn_attr_name]]
+
+        def recursive_prefixes(prefix_set, sequence):
+            for i in range(1, len(sequence)):
+                # if space - recurse
+                if sequence[i] == ' ':
+                    recursive_prefixes(prefix_set, sequence[i+1:])
+                else:
+                    prefix_set.add(sequence[:i].strip())
+            prefix_set.add(sequence)
 
         # create text field for station names
         normal_names = set()
         for station_attr in STATION_NAMES:
-            normal_name = REPLACE_PUNCT.sub(' ', strip_accents(station.pop(station_attr)))
+            normal_name = ' '.join(REPLACE_PUNCT.sub(' ', strip_accents(station.pop(station_attr))).split()).lower()
             normal_names.add(normal_name)
 
+        # TODO: also recurse names
         names = set()
         for normal_name in list(normal_names):
             for name in normal_name.split():
-                names.add(name.lower())
+                names.add(name)
         station['names'] = list(names)
 
         # create text field for station name prefixes
         prefix_names = set()
-        for name in list(names):
-            for i in range(1, len(name)+1):
-                prefix_names.add(name[:i])
-        # add prefixes for the whole station name
-        # because we need to search in order
         for normal_name in list(normal_names):
-            for i in range(1, len(normal_name)+1):
-                prefix_names.add(name[:i])
+            recursive_prefixes(prefix_names, normal_name)
 
         station['prefix_names'] = list(prefix_names)
 
