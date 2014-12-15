@@ -50,25 +50,29 @@ def main_import(srv_addr, db_name):
         station['synonyms'] = [station[syn_attr_name] for syn_attr_name in SYNONYMS]
 
         # create text field for station names
-        names_set = set()
-        names = []
+        normal_names = set()
         for station_attr in STATION_NAMES:
-            for name in REPLACE_PUNCT.sub(' ', strip_accents(station.pop(station_attr))).split():
-                if name.lower() not in names_set:
-                    names.append(name.lower())
-                    names_set.add(name.lower())
-        station['names'] = names
+            normal_name = REPLACE_PUNCT.sub(' ', strip_accents(station.pop(station_attr)))
+            normal_names.add(normal_name)
+
+        names = set()
+        for normal_name in list(normal_names):
+            for name in normal_name.split():
+                names.add(name.lower())
+        station['names'] = list(names)
 
         # create text field for station name prefixes
-        names_set = set()
-        prefix_names = []
-        for name in names:
+        prefix_names = set()
+        for name in list(names):
             for i in range(1, len(name)+1):
-                prefix_name = name[:i]
-                if prefix_name not in names_set:
-                    prefix_names.append(prefix_name)
-                    names_set.add(prefix_name)
-        station['prefix_names'] = prefix_names
+                prefix_names.add(name[:i])
+        # add prefixes for the whole station name
+        # because we need to search in order
+        for normal_name in list(normal_names):
+            for i in range(1, len(normal_name)+1):
+                prefix_names.add(name[:i])
+
+        station['prefix_names'] = list(prefix_names)
 
         stations.append(station)
 
