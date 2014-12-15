@@ -11,7 +11,8 @@ def strip_accents(s):
                    if unicodedata.category(c) != 'Mn')
 
 REPLACE_PUNCT = re.compile(r'[.()/,\-&]')
-STATION_NAMES = 'stop_name,ch_station_long_name,ch_station_synonym1,ch_station_synonym2,ch_station_synonym3,ch_station_synonym4'.split(',')
+STATION_NAMES = ['stop_name','ch_station_long_name','ch_station_synonym1','ch_station_synonym2','ch_station_synonym3','ch_station_synonym4']
+SYNONYMS = STATION_NAMES[2:]
 
 
 def main_import(srv_addr, db_name):
@@ -44,6 +45,9 @@ def main_import(srv_addr, db_name):
         station_ids.add(station['stop_id'])
         station['location'] = {'type': 'Point', 'coordinates': [float(station.pop('stop_lon')), float(station.pop('stop_lat')) ]}
         station['canonical_name'] = station['stop_name']
+        
+        # synonyms, used in weighted matching
+        station['synonyms'] = [station[syn_attr_name] for syn_attr_name in SYNONYMS]
 
         # create text field for station names
         names_set = set()
