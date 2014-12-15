@@ -62,7 +62,8 @@ def main_import(srv_addr, db_name):
         normal_names = set()
         for station_attr in STATION_NAMES:
             normal_name = ' '.join(REPLACE_PUNCT.sub(' ', strip_accents(station.pop(station_attr))).split()).lower()
-            normal_names.add(normal_name)
+            if normal_name:
+                normal_names.add(normal_name)
 
         # TODO: also recurse names
         names = set()
