@@ -56,12 +56,14 @@ class DB {
         $query = Normalizer::normalizeString($query);
         $stations = self::initialNearbyLocationsQuery($query, $lon, $lat, $limit, $config);
         $insert_index = 0;
+        $added_stations = array();
         foreach ($stations as $station) {
             $station_processed = Normalizer::normalizeString($station->name);
             // doesn't start with a query - go on
             if (strpos($station_processed, $query) != 0) {
                 $insert_index += 1;
             };
+            $added_stations[] = $station->id;
         }
 
         // search for weighted stations
@@ -69,7 +71,7 @@ class DB {
         $extra_stations = array();
         if ($weight_limit > 0) {
             $collection = self::getCollection($config, COLLECTION);
-            $extra_cursor = $collection->find(Array('prefix_names' => $query,
+            $extra_cursor = $collection->find(Array('prefix_names' => $query, 'stop_id' => Array('$nin' => $added_stations),
                 'weight' => Array('$gt' => 0)))->sort(array('weight' => -1))->limit($weight_limit);
             $extra_stations = LocationFactory::createFromMongoCursor($extra_cursor, $lon, $lat, $query);
         }
