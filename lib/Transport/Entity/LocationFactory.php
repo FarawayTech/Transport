@@ -3,6 +3,7 @@
 namespace Transport\Entity;
 
 use Transport\Entity\Location\Station;
+use Language\Normalizer;
 
 class LocationFactory
 {
@@ -27,9 +28,20 @@ class LocationFactory
         return Location\Station::createFromJson($json);
     }
 
-    static public function createFromMongoRow($result, $lon, $lat) {
+    static public function createFromMongoRow($result, $lon, $lat, $query) {
         $station = new Station($result['stop_id']);
-        $station->name = $result['canonical_name'];
+        # select proper name based on the query
+        if (count($result['synonyms']) == 1) {
+            $station->name = $result['synonyms'][0];
+        }
+        else {
+            foreach ($result['synonyms'] as $name) {
+                if (strpos(Normalizer::normalizeString($name), $query) !== false) {
+                    $station->name = $name;
+                    break;
+                }
+            }
+        }
         $station->coordinate->x = $result['location']['coordinates'][1];
         $station->coordinate->y = $result['location']['coordinates'][0];
         $station->coordinate->type = 'WGS84';
@@ -37,10 +49,10 @@ class LocationFactory
         return $station;
     }
 
-    static public function createFromMongoCursor(\MongoCursor $cursor, $lon, $lat) {
+    static public function createFromMongoCursor(\MongoCursor $cursor, $lon, $lat, $query) {
         $stations = array();
         foreach ($cursor as $result) {
-            $stations[] = self::createFromMongoRow($result, $lon, $lat);
+            $stations[] = self::createFromMongoRow($result, $lon, $lat, $query);
         }
         return $stations;
     }
