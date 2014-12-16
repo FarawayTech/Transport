@@ -1167,7 +1167,9 @@
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.4.0,<5.6",
-        "ext-mongo": "*"
+        "ext-memcached": "*",
+        "ext-mongo": "*",
+        "ext-apcu": "*"
     },
     "platform-dev": []
 }
