@@ -63,19 +63,15 @@ def main_import(srv_addr, db_name):
             if normal_name:
                 normal_names.add(normal_name)
 
-        # TODO: also recurse names
-        names = set()
-        for normal_name in list(normal_names):
-            for name in normal_name.split():
-                names.add(name)
-        station['names'] = list(names)
+        station['first_names'] = list(set([name[:i+1].strip() for name in normal_names for i in range(len(name))]))
 
         # create text field for station name prefixes
-        prefix_names = set()
+        second_names = set()
         for normal_name in list(normal_names):
-            recursive_prefixes(prefix_names, normal_name)
+            second_name = ' '.join(normal_name.split()[1:]) or normal_name
+            recursive_prefixes(second_names, second_name)
 
-        station['prefix_names'] = list(prefix_names)
+        station['second_names'] = list(second_names)
 
         stations.append(station)
 
@@ -90,7 +86,7 @@ def main_import(srv_addr, db_name):
     db.stops.insert(stations)
     print "Creating indexes"
     db.stops.ensure_index([("location", pymongo.GEOSPHERE)])
-    db.stops.ensure_index('names')
-    db.stops.ensure_index('prefix_names')
+    db.stops.ensure_index('first_names')
+    db.stops.ensure_index('second_names')
     db.stops.ensure_index('weight')
     client.close()
