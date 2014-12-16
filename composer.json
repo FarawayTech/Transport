@@ -30,7 +30,7 @@
         "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
-        "psr-0": {"Transport": "lib/"}
+        "psr-0": {"Transport": "lib/", "Language": "lib/"}
     },
     "minimum-stability": "dev"
 }
