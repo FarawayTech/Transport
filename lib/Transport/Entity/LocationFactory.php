@@ -31,7 +31,7 @@ class LocationFactory
     static public function createFromMongoRow($result, $lon, $lat, $query) {
         $station = new Station($result['stop_id']);
         # select proper name based on the query
-        if (count($result['synonyms']) == 1) {
+        if (count($result['synonyms']) == 1 || is_null($query)) {
             $station->name = $result['synonyms'][0];
         }
         else {
@@ -49,7 +49,7 @@ class LocationFactory
         return $station;
     }
 
-    static public function createFromMongoCursor(\MongoCursor $cursor, $lon, $lat, $query) {
+    static public function createFromMongoCursor(\MongoCursor $cursor, $lon, $lat, $query=null) {
         $stations = array();
         foreach ($cursor as $result) {
             $stations[] = self::createFromMongoRow($result, $lon, $lat, $query);
