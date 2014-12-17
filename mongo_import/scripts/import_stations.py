@@ -75,18 +75,23 @@ def main_import(srv_addr, db_name):
 
         stations.append(station)
 
-    print "Importing into MongoDB at %s/%s" % (srv_addr, db_name)
+    print "Importing into MongoDB at %s/%s (temp collection)" % (srv_addr, db_name)
     from pymongo import MongoClient
     import pymongo
     client = MongoClient(srv_addr)
+    temp_col = 'temp_stops'
     db = client[db_name]
+    temp_col = db['temp_stops']
+
+    temp_col.insert(stations)
+    print "Creating indexes"
+    temp_col.ensure_index([("location", pymongo.GEOSPHERE)])
+    temp_col.ensure_index('first_names')
+    temp_col.ensure_index('second_names')
+    temp_col.ensure_index('weight')
+
+    print 'Dropping old collection and renaming'
     if 'stops' in db.collection_names():
         db.drop_collection('stops')
-
-    db.stops.insert(stations)
-    print "Creating indexes"
-    db.stops.ensure_index([("location", pymongo.GEOSPHERE)])
-    db.stops.ensure_index('first_names')
-    db.stops.ensure_index('second_names')
-    db.stops.ensure_index('weight')
+    temp_col.rename('stops')
     client.close()
