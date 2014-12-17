@@ -135,7 +135,7 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
     $query = trim($request->get('query'));
 
     if ($query) {
-        if ($lat && $lon && $app['provider']->isNearByLocal() && $app['mongo.config']) {
+        if ($app['provider']->isNearByLocal() && $app['mongo.config']) {
             // query mongo with nearest stop search
             $stations = DB::findNearbyLocationsQuery($query, $lon, $lat, $limit, $app['mongo.config']);
         }
@@ -150,7 +150,6 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
             $stations = DB::findNearbyLocations($lon, $lat, $limit, $app['mongo.config']);
         }
         else {
-            // TODO: filter stations with the same name (ZVV)
             $query = new NearbyQuery($lat, $lon, $limit);
             $stations = $app['api']->findNearbyLocations($query);
         }

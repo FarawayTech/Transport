@@ -45,7 +45,8 @@ class LocationFactory
         $station->coordinate->x = $result['location']['coordinates'][1];
         $station->coordinate->y = $result['location']['coordinates'][0];
         $station->coordinate->type = 'WGS84';
-        $station->distance = $station->coordinate->getDistanceTo($lon, $lat);
+        if ($lat && $lon)
+            $station->distance = $station->coordinate->getDistanceTo($lon, $lat);
         return $station;
     }
 
