@@ -5,7 +5,6 @@ namespace Transport;
 
 use Language\Normalizer;
 use MongoClient;
-use SplMaxHeap;
 use Transport\Entity\LocationFactory;
 
 const COLLECTION = "stops";
@@ -73,6 +72,8 @@ class DB {
         $cursor = $collection->find(Array('second_names' => $query,
             'stop_id' => Array('$nin' => self::getStataionIDs($stations))))->limit($limit);
         $stations = array_merge($stations, LocationFactory::createFromMongoCursor($cursor, $lon, $lat, $query));
+
+        // 4. TODO: search stations in a single-word index (to handle skips)
 
         return $stations;
     }
