@@ -1,4 +1,4 @@
-locality,zone,sms_number,main_code,reduced_suffix,daypass_prefix,main_suffix,pyjama_code
+locality,zone,sms_number,main_code,reduced_suffix,daypass_prefix,main_suffix,night_code
 
 Bulle,30,873,30,R,J,,
 Vuadens,30,873,30,R,J,,
