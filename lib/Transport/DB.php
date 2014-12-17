@@ -42,6 +42,7 @@ class DB {
     public static function findNearbyLocationsQuery($query, $lon, $lat, $limit, $config) {
         $query = Normalizer::normalizeString($query);
         $collection = self::getCollection($config, COLLECTION);
+        $stations = array();
         if ($lat && $lon) {
             // 1.1 Find local stop if exists, first on second names
             $cursor = $collection->find(Array('location' => Array('$nearSphere' =>
