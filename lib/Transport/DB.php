@@ -42,7 +42,7 @@ class DB {
     public static function findNearbyLocationsQuery($query, $lon, $lat, $limit, $config) {
         $query = Normalizer::normalizeString($query);
         $collection = self::getCollection($config, COLLECTION);
-        // 1. Find local stop if exists
+        // 1.1 Find local stop if exists, first on second names
         $cursor = $collection->find(Array('location' => Array('$nearSphere' =>
             Array('$geometry' => Array('type'=>'Point','coordinates' => Array(floatval($lon), floatval($lat))),
                   '$maxDistance' => 10000)), //10km max
@@ -50,6 +50,17 @@ class DB {
 
         $stations = LocationFactory::createFromMongoCursor($cursor, $lon, $lat, $query);
         $limit -= count($stations);
+
+        // 1.2 Then on first names if not found
+        if (count($stations) == 0) {
+            $cursor = $collection->find(Array('location' => Array('$nearSphere' =>
+                Array('$geometry' => Array('type'=>'Point','coordinates' => Array(floatval($lon), floatval($lat))),
+                    '$maxDistance' => 10000)), //10km max
+                'first_names'=>$query))->limit(1);
+
+            $stations = LocationFactory::createFromMongoCursor($cursor, $lon, $lat, $query);
+            $limit -= count($stations);
+        }
 
         // 2. Weighted stations
         $cursor = $collection->find(Array('first_names' => $query, 'stop_id' => Array('$nin' => self::getStataionIDs($stations)),
