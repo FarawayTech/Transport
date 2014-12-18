@@ -4,6 +4,7 @@ import subprocess
 import os
 import re
 import unicodedata
+import shutil
 
 def strip_accents(s):
     s = s.decode('utf-8')
@@ -19,8 +20,15 @@ def main_import(srv_addr, db_name):
         os.mkdir("temp_import")
     except:
         pass
-    print "Downloading stops.csv"
+
+    PREV_COUNT = sum(1 for line in open("temp_import/stops.csv"))
+    shutil.move("temp_import/stops.csv", "temp_import/stops_old.csv")
+    print("Downloading stops file...\t")
     subprocess.call(["curl http://gtfs.geops.ch/dl/complete/stops.txt > temp_import/stops.csv"], shell=True)
+    print "[OK]"
+    CUR_COUNT = sum(1 for line in open("temp_import/stops.csv"))
+    if CUR_COUNT + 10 < PREV_COUNT:
+        print "New file contains %d stations less than the old one, aborting\t[FAIL]" % (PREV_COUNT-CUR_COUNT)
     subprocess.call(["cat temp_import/stops.csv | sort -r -k1,1 -t',' > temp_import/stops_sorted.csv"], shell=True)
 
 
