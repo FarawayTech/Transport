@@ -81,6 +81,14 @@ def main_import(srv_addr, db_name):
 
         station['second_names'] = list(second_names)
 
+        # all name prefixes
+        prefix_names = set()
+        for normal_name in list(normal_names):
+            for name in normal_name.split():
+                for i in range(len(name)):
+                    prefix_names.add(name[:i+1])
+        station['prefix_names'] = list(prefix_names)
+
         stations.append(station)
 
     print "Importing into MongoDB at %s/%s (temp collection)" % (srv_addr, db_name)
@@ -94,8 +102,10 @@ def main_import(srv_addr, db_name):
     temp_col.insert(stations)
     print "Creating indexes"
     temp_col.ensure_index([("location", pymongo.GEOSPHERE)])
+    temp_col.ensure_index('stop_id')
     temp_col.ensure_index('first_names')
     temp_col.ensure_index('second_names')
+    temp_col.ensure_index('prefix_names')
     temp_col.ensure_index('weight')
 
     print 'Dropping old collection and renaming'

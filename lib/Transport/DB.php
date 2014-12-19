@@ -73,7 +73,7 @@ class DB {
         if ($limit <= 0)
             return $stations;
 
-        // 3. Everything else, TODO: preferably by ordered by distance
+        // 3. Everything else, TODO: preferably ordered by distance
         // 3.1 first query on first names
         $cursor = $collection->find(Array('first_names' => $query,
             'stop_id' => Array('$nin' => self::getStataionIDs($stations))))->limit($limit);
@@ -85,9 +85,15 @@ class DB {
         // 3.2 then on second names
         $cursor = $collection->find(Array('second_names' => $query,
             'stop_id' => Array('$nin' => self::getStataionIDs($stations))))->limit($limit);
+        $limit -= $cursor->count();
         $stations = array_merge($stations, LocationFactory::createFromMongoCursor($cursor, $lon, $lat, $query));
+        if ($limit <= 0)
+            return $stations;
 
-        // 4. TODO: search stations in a single-word index (to handle skips)
+        // 4. Lastly, search on a single-word prefixes, to handle skips
+        $cursor = $collection->find(Array('prefix_names'=>Array('$all'=> explode(' ',$query)),
+            'stop_id' => Array('$nin' => self::getStataionIDs($stations))))->limit($limit);
+        $stations = array_merge($stations, LocationFactory::createFromMongoCursor($cursor, $lon, $lat, null));
 
         return $stations;
     }
