@@ -7,6 +7,10 @@ class ZVV extends Provider
     public $STB_URL = 'http://online.fahrplan.zvv.ch/bin/stboard.exe/en';
     public $URL_QUERY = 'http://online.fahrplan.zvv.ch/bin/query.exe/eny';
 
+    public static function isNearByLocal() {
+        return true;
+    }
+
     public static function cleanRouteXML($content)
     {
         $content = parent::cleanRouteXML($content);
