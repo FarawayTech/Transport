@@ -3,4 +3,5 @@ var/logs/
 var/xhprof/
 vendor/
 .idea/
+*.pyc
 composer.phar
