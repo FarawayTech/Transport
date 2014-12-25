@@ -10,7 +10,7 @@ class Journey
     public static $JOURNEYS =
     array('BaselJourney' => array('places' => array('Basel', 'Pratteln', 'Rodersdorf', 'Dornach-Arlesheim', 'Ettingen',
                                                     'Flüh', 'Basel Wiesenplatz', 'Birsfelden', 'Allschwil', 'Riehen',
-                                                    'Hüslimatt', 'Aesch', 'Aesch BL Dorf', 'St-Louis Grenze',
+                                                    'Hüslimatt', 'Aesch', 'Aesch BL Dorf', 'St-Louis Grenze', 'Weil am Rhein',
                                                     'Binningen', 'Basel Messeplatz', 'Basel Bankverein', 'Oberwil BL'),
                                   'colors' => array('1' => 'ff804b2f', '2' => 'ffa8834a', '3' => 'ff3c4796',
                                                     '6' => 'ff006ab0', '8' => 'ffeb6ea2', '10' => 'ffffca0a',
