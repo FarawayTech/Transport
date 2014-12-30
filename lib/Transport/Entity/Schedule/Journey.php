@@ -58,7 +58,7 @@ class Journey
                                                      'V' => 'ffFF6600', 'W' => 'ff003399', 'X' => 'ff003399',
                                                      'Y' => 'ffFF9999', 'Z' => 'ffFF9999')),
           'LausanneJourney' => array('places' => array('Lausanne', 'Lausanne-Flon', 'Prilly', 'Lutry', 'Pully', 'Paudex',
-                                                       'Crissier', 'Epalignes', 'Renens VD', 'St-Sulpice VD',
+                                                       'Crissier', 'Epalinges', 'Renens VD', 'St-Sulpice VD',
                                                        'Ecublens VD', 'Echichens', 'Chavannes-p.-R.',
                                                        'Chavannes-près-Renens'),
                                      'colors' => array('1' => 'ffeb1c20', '2' => 'fffcec00', '4' => 'ff00a34c',
