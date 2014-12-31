@@ -197,7 +197,7 @@ class Journey
 
                 switch ($journeyAttribute->Attribute['type']) {
                     case 'NAME':
-                        $obj->name = (string) $journeyAttribute->Attribute->AttributeVariant->Text;
+                        $obj->name = trim((string) $journeyAttribute->Attribute->AttributeVariant->Text);
                         break;
                     case 'CATEGORY':
                         $obj->category = (string) $journeyAttribute->Attribute->AttributeVariant->Text;

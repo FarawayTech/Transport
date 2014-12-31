@@ -35,7 +35,7 @@ class Provider
             if($locality=='Berlin')
                 $provider = new VBB();
         } else if ($country=='AT') {
-            //$provider = new OEBB();
+            $provider = new OEBB();
         }
         return $provider;
     }
@@ -397,6 +397,8 @@ class Provider
             return 'T';
         if ("NFT" == $category) // Niederflur-Tram
             return 'T';
+        if ("NTR" == $category) // ÖBB Niederflur-Tram
+            return 'T';
         if ("TRAM" == $category)
             return 'T';
         if ("TRA" == $category)
@@ -412,6 +414,14 @@ class Provider
         if (preg_match('/BUS\w{0,5}/', $category)) // Generic Bus
             return 'B';
         if ("NFB" == $category) // Low-floor bus (Niederflur-Bus)
+            return 'B';
+        if ("NMG" == $category) // ÖBB low-floor bus
+            return 'B';
+        if ("NMP" == $category) // ÖBB low-floor bus
+            return 'B';
+        if ("HOG" == $category) // ÖBB bus
+            return 'B';
+        if ("OBU" == $category) // ÖBB Oberleitungs-Bus
             return 'B';
         if ("SEV" == $category) // Schienen-Ersatz-Verkehr
             return 'B';
