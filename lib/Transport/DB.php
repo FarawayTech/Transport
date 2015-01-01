@@ -117,6 +117,11 @@ class DB {
         }
     }
 
+    public static function getStation($id) {
+        $collection = self::getCollection(COLLECTION);
+        return LocationFactory::createFromMongoRow($collection->findOne(array('stop_id' => $id)), null, null, null);
+    }
+
     public static function getLines($lon, $lat) {
         $collection = self::getCollection(LINE_COLORS_COLLECTION);
         $result = $collection->findOne(Array('location' => Array('$nearSphere' => Array('$geometry' =>

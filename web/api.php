@@ -32,7 +32,6 @@ $app['buzz.client'] = null;
 $app['monolog.level'] = Monolog\Logger::ERROR;
 $app['xhprof'] = false;
 $app['redis.config'] = false;
-$app['mongo.config'] = false;
 $app['proxy'] = false;
 
 /// load config
@@ -135,9 +134,9 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
     $query = trim($request->get('query'));
 
     if ($query) {
-        if ($app['provider']->isNearByLocal() && $app['mongo.config']) {
+        if ($app['provider']->isNearByLocal()) {
             // query mongo with nearest stop search
-            $stations = DB::findNearbyLocationsQuery($query, $lon, $lat, $limit, $app['mongo.config']);
+            $stations = DB::findNearbyLocationsQuery($query, $lon, $lat, $limit);
         }
         else{
             $query = new LocationQuery($query, $request->get('type'));
@@ -145,9 +144,9 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
         }
     }
     else if ($lat && $lon) {
-        if ($app['provider']->isNearByLocal() && $app['mongo.config'])
+        if ($app['provider']->isNearByLocal())
         {
-            $stations = DB::findNearbyLocations($lon, $lat, $limit, $app['mongo.config']);
+            $stations = DB::findNearbyLocations($lon, $lat, $limit);
         }
         else {
             $query = new NearbyQuery($lat, $lon, $limit);
@@ -156,7 +155,7 @@ $app->get('/v1/locations', function(Request $request) use ($app) {
     }
 
     // add sms ticketing information
-    DB::populateSMSTicketing($stations, $app['mongo.config']);
+    DB::populateSMSTicketing($stations);
 
     $result = array('stations' => $stations);
 
@@ -229,16 +228,16 @@ $app->get('/v1/stationboard', function(Request $request) use ($app) {
     }
 
     $transportations = $request->get('transportations');
-    $station = $request->get('id');
+    $id = $request->get('id');
 
-//    if ($app['provider']->isNearByLocal()) {
-//        // TODO: get station from DB
-//    }
-//    else {
-        $query = new LocationQuery($station);
+    if ($app['provider']->isNearByLocal()) {
+        $station = DB::getStation($id);
+    }
+    else {
+        $query = new LocationQuery($id);
         $stations = $app['api']->findLocations($query);
         $station = reset($stations);
-//    }
+    }
 
     if ($station instanceof Station) {
         $query = new StationBoardQuery($station, $date);
