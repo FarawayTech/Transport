@@ -79,7 +79,7 @@ class Journey
 
     private function resolveColor()
     {
-        return @$this->lines[$this->number];
+        return @$this->lines[$this->resolvedNumber];
     }
 
     private function resolveNumber()
@@ -94,9 +94,6 @@ class Journey
                 return $this->number;
             else
                 return $this->shortCategory.$this->number;
-        }
-        if (!is_null($this->color)) {
-            return $this->number;
         }
         return $this->category;
     }
@@ -166,8 +163,8 @@ class Journey
         }
 
         $obj->shortCategory = $provider::getShortCategory($obj->category);
-        $obj->color = $obj->resolveColor();
         $obj->resolvedNumber = $obj->resolveNumber();
+        $obj->color = $obj->resolveColor();
 
         return $obj;
     }
@@ -226,6 +223,8 @@ class Journey
         $jhandle = array($obj->name, $xml['dirnr']);
         $obj->jHandle = implode(";", $jhandle);
 
+        $obj->resolvedNumber = $obj->resolveNumber();
+
         //---resolve color
         $bg_color = (string) $xml['lineBG'];
         $fg_color = (string) $xml['lineFG'];
@@ -237,7 +236,6 @@ class Journey
         if ($fg_color and $fg_color != '000000')
             $obj->textColor = 'ff' . $fg_color;
         //---end color
-        $obj->resolvedNumber = $obj->resolveNumber();
 
         return $obj;
     }
