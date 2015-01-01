@@ -61,6 +61,9 @@ class StationBoardJourney extends Journey
                 if ($prevTime > $curTime && $prevTime > $prognosis) { // we passed midnight
                     $localDate->add(new \DateInterval('P1D'));
                 }
+                $status = trim((string)$journey->JProg->JStatus);
+                if ($status == "FAILURE")
+                    continue;
                 $journeys[] = self::createFromXml($journey, $localDate, $provider, null);
                 $prevTime = $curTime;
             }
