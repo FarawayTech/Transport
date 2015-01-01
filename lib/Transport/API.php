@@ -155,17 +155,18 @@ class API
      */
     public function getStationBoard(StationBoardQuery $query, Station $station)
     {
+        $lines = DB::getLines($station->coordinate->x, $station->coordinate->y);
         $provider = $this->provider;
         $query->addProvider($provider);
         $response = Query::sendQuery($this->browser, $query);
         if ($query->isExtXML())
         {
             $result = simplexml_load_string($response->getContent());
-            $journeys = StationBoardJourney::createListFromXml($result, $query->date, $provider);
+            $journeys = StationBoardJourney::createListFromXml($result, $query->date, $lines, $provider);
         }
         else {
             $result = simplexml_load_string($provider::cleanStbXML($response->getContent()));
-            $journeys = StationBoardJourney::createListFromStbXml($result, $station, $provider);
+            $journeys = StationBoardJourney::createListFromStbXml($result, $lines, $provider);
         }
 
         return $journeys;
