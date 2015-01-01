@@ -9,21 +9,24 @@ use Transport\Entity\LocationFactory;
 
 const COLLECTION = "stops";
 const SMS_COLLECTION = "sms_tickets";
+const LINE_COLORS_COLLECTION = "line_colors";
 
 class DB {
+    
+    public static $CONFIG = null;
 
-    private static function getCollection($config, $collection) {
-        return self::getDB($config)->selectCollection($collection);
+    private static function getCollection($collection) {
+        return self::getDB()->selectCollection($collection);
     }
 
-    private static function getDB($config) {
-        $m = new MongoClient($config);
-        $dbname = substr(parse_url($config, PHP_URL_PATH), 1);
+    private static function getDB() {
+        $m = new MongoClient(self::$CONFIG);
+        $dbname = substr(parse_url(self::$CONFIG, PHP_URL_PATH), 1);
         return $m->selectDB($dbname);
     }
 
-    public static function findNearbyLocations($lon, $lat, $limit, $config) {
-        $result = self::getCollection($config, COLLECTION)->find(Array('location' => Array('$nearSphere' => Array('$geometry' =>
+    public static function findNearbyLocations($lon, $lat, $limit) {
+        $result = self::getCollection(COLLECTION)->find(Array('location' => Array('$nearSphere' => Array('$geometry' =>
             Array('type'=>'Point', 'coordinates' => Array(floatval($lon), floatval($lat)),
                 // 10km max distance
                 '$maxDistance'=>10000)))))->limit(intval($limit));
@@ -39,9 +42,9 @@ class DB {
         return $added_stations;
     }
 
-    public static function findNearbyLocationsQuery($query, $lon, $lat, $limit, $config) {
+    public static function findNearbyLocationsQuery($query, $lon, $lat, $limit) {
         $query = Normalizer::normalizeString($query);
-        $collection = self::getCollection($config, COLLECTION);
+        $collection = self::getCollection(COLLECTION);
         $stations = array();
         if ($lat && $lon) {
             // 1.1 Find local stop if exists, first on second names
@@ -98,8 +101,8 @@ class DB {
         return $stations;
     }
 
-    public static function populateSMSTicketing($stations, $config) {
-        $collection = self::getCollection($config, SMS_COLLECTION);
+    public static function populateSMSTicketing($stations) {
+        $collection = self::getCollection(SMS_COLLECTION);
         $cache = array();
         foreach ($stations as $station) {
             $main_name = explode(",", $station->name)[0];
@@ -112,6 +115,15 @@ class DB {
                 $cache[$main_name] = $result;
             }
         }
+    }
+
+    public static function getLines($lon, $lat) {
+        $collection = self::getCollection(LINE_COLORS_COLLECTION);
+        $result = $collection->findOne(Array('location' => Array('$nearSphere' => Array('$geometry' =>
+            Array('type'=>'Point', 'coordinates' => Array(floatval($lon), floatval($lat)),
+                // 20km max distance - need to think more
+                '$maxDistance'=>20000)))));
+        return $result['lines'];
     }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Transport\DB;
+
 // Debug
 if (isset($_ENV['PROD']))
     $app['debug'] = false;
@@ -28,11 +30,11 @@ if (isset($_ENV['PROD'])){
         'port' => parse_url($_ENV['REDISCLOUD_URL'], PHP_URL_PORT),
         'password' => parse_url($_ENV['REDISCLOUD_URL'], PHP_URL_PASS),
     );
-    $app['mongo.config'] = $_ENV['MONGOLAB_URI'];
+    DB::$CONFIG = $_ENV['MONGOLAB_URI'];
 }
 else {
     $app['redis.config'] = array('host' => 'localhost', 'port' => 6379);
-    $app['mongo.config'] = 'mongodb://localhost:27017/test';
+    DB::$CONFIG = 'mongodb://localhost:27017/test';
 }
 
 // if hosted behind a reverse proxy
