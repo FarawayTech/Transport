@@ -1,4 +1,4 @@
-stop_name,stop_lat,stop_lon,line_num,color
+location,location_lat,location_lon,line_num,color
 Fribourg,46.803268,7.151023,1,ff53B401
 Fribourg,46.803268,7.151023,11,ff0fa381
 Fribourg,46.803268,7.151023,3,ffFFD012
