@@ -26,9 +26,9 @@ def main_import(srv_addr, db_name):
         else:
             location = line
             location['location'] = {'type': 'Point', 'coordinates': [float(location.pop('location_lon')), float(location.pop('location_lat')) ]}
-            location['lines'] = []
+            location['lines'] = {}
             locations[location_name] = location
-        location['lines'].append({line.pop('line_num'): line.pop('color')})
+        location['lines'][line.pop('line_num')] = line.pop('color')
 
 
     print "Importing into MongoDB at %s/%s" % (srv_addr, db_name)
