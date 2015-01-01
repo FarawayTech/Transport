@@ -229,16 +229,18 @@ $app->get('/v1/stationboard', function(Request $request) use ($app) {
     }
 
     $transportations = $request->get('transportations');
+    $station = $request->get('id');
 
-    $station = $request->get('station') ?: $request->get('id');
-
-    $query = new LocationQuery($station);
-    $stations = $app['api']->findLocations($query);
-    $station = reset($stations);
+//    if ($app['provider']->isNearByLocal()) {
+//        // TODO: get station from DB
+//    }
+//    else {
+        $query = new LocationQuery($station);
+        $stations = $app['api']->findLocations($query);
+        $station = reset($stations);
+//    }
 
     if ($station instanceof Station) {
-        $app['stats']->station($station);
-
         $query = new StationBoardQuery($station, $date);
         if ($transportations) {
             $query->transportations = $transportations;

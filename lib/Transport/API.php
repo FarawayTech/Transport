@@ -166,7 +166,7 @@ class API
         }
         else {
             $result = simplexml_load_string($provider::cleanStbXML($response->getContent()));
-            $journeys = StationBoardJourney::createListFromStbXml($result, $lines, $provider);
+            $journeys = StationBoardJourney::createListFromStbXml($result, $station, $lines, $provider);
         }
 
         return $journeys;

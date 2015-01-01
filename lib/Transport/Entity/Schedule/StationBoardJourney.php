@@ -1,6 +1,7 @@
 <?php
 
 namespace Transport\Entity\Schedule;
+use Transport\Entity\Location\Station;
 use Transport\Providers\Provider;
 
 /**
@@ -8,6 +9,42 @@ use Transport\Providers\Provider;
  */
 class StationBoardJourney extends Journey
 {
+    /**
+     * @var Stop
+     */
+    public $stop;
+
+    /**
+     * @param   \SimpleXMLElement $xml
+     * @param   \DateTime|string $date The date that will be assigned to this journey
+     * @param   Array $lines Dict of line colors
+     * @param   Provider $provider
+     * @param   Journey $obj An optional existing journey to overwrite
+     * @return  Journey
+     */
+    static public function createFromXml(\SimpleXMLElement $xml, \DateTime $date, $lines, Provider $provider, Journey $obj = null)
+    {
+        if (!$obj) {
+            $obj = new StationBoardJourney();
+        }
+
+        $obj->stop = Stop::createFromXml($xml->MainStop->BasicStop, $date, null);
+        $obj = parent::createFromXml($xml, $date, $lines, $provider, $obj);
+
+        return $obj;
+    }
+
+    static public function createFromStbXml(\SimpleXMLElement $xml, $lines, Provider $provider, Journey $obj = null)
+    {
+        if (!$obj) {
+            $obj = new StationBoardJourney();
+        }
+
+        $obj = Journey::createFromStbXml($xml, $lines, $provider, $obj);
+
+        return $obj;
+    }
+
     public static function createListFromXml(\SimpleXMLElement $xml, \DateTime $date, $lines, Provider $provider)
     {
         // since the stationboard always lists all connections starting from now we just use the date
@@ -36,14 +73,16 @@ class StationBoardJourney extends Journey
     }
 
 
-    public static function createListFromStbXml(\SimpleXMLElement $xml, $lines, Provider $provider)
+    public static function createListFromStbXml(\SimpleXMLElement $xml, Station $station, $lines, Provider $provider)
     {
         $journeys = array();
         if ($xml->Journey) {
             foreach ($xml->Journey as $journey) {
                 $delay = (string)$journey['delay'];
                 if ($delay != 'cancel') {
-                    $journeys[] = self::createFromStbXml($journey, $lines, $provider);
+                    $journey_obj = self::createFromStbXml($journey, $lines, $provider);
+                    $journey_obj->stop = Stop::createFromStbXml($journey, $station);
+                    $journeys[] = $journey_obj;
                 }
             }
         }

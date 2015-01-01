@@ -2,6 +2,7 @@
 
 namespace Transport\Entity\Schedule;
 
+use Transport\DB;
 use Transport\Entity;
 use Transport\Providers\Provider;
 
@@ -33,16 +34,19 @@ class Section
             $obj = new Section();
         }
 
+        $obj->departure = Stop::createFromXml($xml->Departure->BasicStop, $date, null);
+        $obj->arrival = Stop::createFromXml($xml->Arrival->BasicStop, $date, null);
+
+        $coordinates = $obj->departure->station->coordinate;
+
         if ($xml->Journey) {
-            $obj->journey = Entity\Schedule\Journey::createFromXml($xml->Journey, $date, $provider, null);
+            $lines = DB::getLines($coordinates->x, $coordinates->y);
+            $obj->journey = Journey::createFromXml($xml->Journey, $date, $lines, $provider, null);
         }
 
         if ($xml->Walk) {
-            $obj->walk = Entity\Schedule\Walk::createFromXml($xml->Walk, $date);
+            $obj->walk = Walk::createFromXml($xml->Walk, $date);
         }
-
-        $obj->departure = Entity\Schedule\Stop::createFromXml($xml->Departure->BasicStop, $date, null);
-        $obj->arrival = Entity\Schedule\Stop::createFromXml($xml->Arrival->BasicStop, $date, null);
 
         return $obj;
     }
