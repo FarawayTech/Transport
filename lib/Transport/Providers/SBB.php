@@ -21,6 +21,8 @@ class SBB extends Provider
 
         if ("T" == $category)
             return 'T';
+        if ("NB" == $category)
+            return 'B';
         if ("M" == $category)
             return 'M'; // Lausanne subway
 
