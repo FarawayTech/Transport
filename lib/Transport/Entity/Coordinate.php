@@ -19,6 +19,19 @@ class Coordinate
      */
     public $y;
 
+    private function populateCoordinate($x, $y)
+    {
+        $x = self::intToFloat((string) $x);
+        $y = self::intToFloat((string) $y);
+        if ($y > $x) { // HAFAS bug, returns inverted lat/long
+            $this->x = $y;
+            $this->y = $x;
+        } else {
+            $this->x = $x;
+            $this->y = $y;
+        }
+    }
+
     /**
      * Factory method to create an instance of Coordinate and extract the data from the given xml
      *
@@ -29,9 +42,7 @@ class Coordinate
     {
         $coordinate = new Coordinate();
         $coordinate->type = (string) $xml['type'];
-        $coordinate->x = self::intToFloat((string) $xml['x']);
-        $coordinate->y = self::intToFloat((string) $xml['y']);
-
+        $coordinate->populateCoordinate($xml['x'], $xml['y']);
         return $coordinate;
     }
 
@@ -39,18 +50,7 @@ class Coordinate
     {
         $coordinate = new Coordinate();
         $coordinate->type = 'WGS84'; // best guess
-
-        $x = self::intToFloat($json->x);
-        $y = self::intToFloat($json->y);
-
-        if ($y > $x) { // HAFAS bug, returns inverted lat/long
-          $coordinate->x = $y;
-          $coordinate->y = $x;
-        } else {
-          $coordinate->x = $x;
-          $coordinate->y = $y;
-        }
-
+        $coordinate->populateCoordinate($json->x, $json->y);
         return $coordinate;
     }
 
