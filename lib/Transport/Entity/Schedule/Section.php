@@ -40,7 +40,7 @@ class Section
         $coordinates = $obj->departure->station->coordinate;
 
         if ($xml->Journey) {
-            $lines = DB::getLines($coordinates->x, $coordinates->y);
+            $lines = DB::getLines($coordinates->y, $coordinates->x);
             $obj->journey = Journey::createFromXml($xml->Journey, $date, $lines, $provider, null);
         }
 

@@ -155,7 +155,7 @@ class API
      */
     public function getStationBoard(StationBoardQuery $query, Station $station)
     {
-        $lines = DB::getLines($station->coordinate->x, $station->coordinate->y);
+        $lines = DB::getLines($station->coordinate->y, $station->coordinate->x);
         $provider = $this->provider;
         $query->addProvider($provider);
         $response = Query::sendQuery($this->browser, $query);
