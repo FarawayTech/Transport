@@ -27,9 +27,9 @@ class DB {
 
     public static function findNearbyLocations($lon, $lat, $limit) {
         $result = self::getCollection(COLLECTION)->find(Array('location' => Array('$nearSphere' => Array('$geometry' =>
-            Array('type'=>'Point', 'coordinates' => Array(floatval($lon), floatval($lat)),
+            Array('type'=>'Point', 'coordinates' => Array(floatval($lon), floatval($lat))),
                 // 10km max distance
-                '$maxDistance'=>10000)))))->limit(intval($limit));
+                '$maxDistance'=>10000))))->limit(intval($limit));
         $stations = LocationFactory::createFromMongoCursor($result, $lon, $lat);
         return $stations;
     }
@@ -127,9 +127,9 @@ class DB {
     public static function getLines($lon, $lat) {
         $collection = self::getCollection(LINE_COLORS_COLLECTION);
         $result = $collection->findOne(Array('location' => Array('$nearSphere' => Array('$geometry' =>
-            Array('type'=>'Point', 'coordinates' => Array(floatval($lon), floatval($lat)),
+            Array('type'=>'Point', 'coordinates' => Array(floatval($lon), floatval($lat))),
                 // 20km max distance - need to think more
-                '$maxDistance'=>15000)))));
+                '$maxDistance'=>20000))));
         return $result['lines'];
     }
 
