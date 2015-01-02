@@ -84,7 +84,7 @@ class Journey
 
     private function resolveNumber()
     {
-        if (in_array($this->shortCategory, array_keys(self::$SHORT_CAT_EXCLUDES)) && strlen($this->number) <= 3) {
+        if (array_key_exists($this->shortCategory, self::$SHORT_CAT_EXCLUDES) && strlen($this->number) <= 3) {
             $this->category = self::$SHORT_CAT_EXCLUDES[$this->shortCategory];
             return $this->number;
         }
