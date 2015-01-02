@@ -119,6 +119,8 @@ class DB {
 
     public static function getStation($id) {
         $collection = self::getCollection(COLLECTION);
+        if (substr($id, 0, 2) == "00")
+            $id = substr($id, 2);
         return LocationFactory::createFromMongoRow($collection->findOne(array('stop_id' => $id)), null, null, null);
     }
 
