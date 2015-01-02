@@ -129,7 +129,7 @@ class DB {
         $result = $collection->findOne(Array('location' => Array('$nearSphere' => Array('$geometry' =>
             Array('type'=>'Point', 'coordinates' => Array(floatval($lon), floatval($lat))),
                 // 20km max distance - need to think more
-                '$maxDistance'=>20000))));
+                '$maxDistance'=>15000))));
         return $result['lines'];
     }
 
