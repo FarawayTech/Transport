@@ -30,7 +30,7 @@ class Provider
         $provider = new SBB();
         if ($country == 'CH') {
             if ($area == 'Zurich')
-                $provider = new ZVV();
+                $provider = new SBB();
         } else if ($country == 'DE'){
             if($locality=='Berlin')
                 $provider = new VBB();
