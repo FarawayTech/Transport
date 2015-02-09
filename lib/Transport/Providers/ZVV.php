@@ -4,6 +4,7 @@ namespace Transport\Providers;
 
 class ZVV extends Provider
 {
+    // http://online.fahrplan.zvv.ch/bin/stboard.exe/en?L=2014.vs_stbzvv&input=8503000&boardType=dep&time=18:43&productsFilter=1:1111111111111111&additionalTime=0&disableEquivs=false&maxJourneys=18&start=yes&date=07.02.15&monitor=1&requestType=0&view=preview
     public $STB_URL = 'http://online.fahrplan.zvv.ch/bin/stboard.exe/en';
     public $URL_QUERY = 'http://online.fahrplan.zvv.ch/bin/query.exe/eny';
 
