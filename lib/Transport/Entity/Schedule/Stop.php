@@ -26,6 +26,20 @@ class Stop
     }
 
     /**
+     * Calculates a delay interval
+     *
+     * @param   int        $delay        The delay to parse, in int
+     * @return  \DateInterval  The parsed date interval
+     */
+    private static function calculateDelay($delay)
+    {
+        $delay_interval = new \DateInterval('PT'.abs($delay).'M');
+        if ($delay <0)
+            $delay_interval->invert = 1;
+        return $delay_interval;
+    }
+
+    /**
      * Calculates a datetime by parsing the time and date given
      *
      * @param   string		$time		The time to parse, can contain an optional offset prefix (e.g., "02d")
@@ -121,12 +135,12 @@ class Stop
 
         if ($adelay) {
             $obj->prognosis->arrival = clone $obj->arrival;
-            $obj->prognosis->arrival= $obj->prognosis->arrival->add(new \DateInterval('PT'.$adelay.'M'));
+            $obj->prognosis->arrival= $obj->prognosis->arrival->add(self::calculateDelay($adelay));
             $obj->delay = $adelay;
         }
         if ($ddelay) {
             $obj->prognosis->departure = clone $obj->departure;
-            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('PT'.$ddelay.'M'));
+            $obj->prognosis->departure= $obj->prognosis->departure->add(self::calculateDelay($ddelay));
             $obj->delay = $ddelay;
         }
 
@@ -152,7 +166,7 @@ class Stop
 
         if ($delay) {
             $obj->prognosis->departure = clone $obj->departure;
-            $obj->prognosis->departure= $obj->prognosis->departure->add(new \DateInterval('PT'.$delay.'M'));
+            $obj->prognosis->departure= $obj->prognosis->departure->add(self::calculateDelay($delay));
             $obj->delay = $delay;
         }
         if ($xml['newpl'])
