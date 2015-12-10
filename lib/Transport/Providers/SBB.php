@@ -8,8 +8,8 @@ class SBB extends Provider
     public $URL_QUERY = 'http://fahrplan.sbb.ch/bin/query.exe/eny';
     public $REQ_PROD = 'iPhone3.1';
     public $API_VERSION = '2.3';
-    public $ACCESS_ID = 'vWjygiRIy0uclbLz4qDO7S3G4dcIIViwoLFCZlopGhe88vlsfedGIqctZP9lvqb';
-    public $SEC_ACCESS_ID = 'YJpyuPISerpXNNRTo50fNMP0yVu7L6IMuOaBgS0Xz89l3f6I3WhAjnto4kS9oz1';
+    public $ACCESS_ID = 'YJpyuPISerpXNNRTo50fNMP0yVu7L6IMuOaBgS0Xz89l3f6I3WhAjnto4kS9oz1';
+    public $SEC_ACCESS_ID = 'vWjygiRIy0uclbLz4qDO7S3G4dcIIViwoLFCZlopGhe88vlsfedGIqctZP9lvqb';
 
     public static function isNearByLocal() {
         return true;
