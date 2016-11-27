@@ -75,6 +75,10 @@ abstract class Query implements ISendQuery
             }
             $i--;
         }
+        if ($statusCode != 200 && $response!=null) {
+            error_log($response->getReasonPhrase());
+            error_log($response->getContent());
+        }
         return $response;
     }
 
