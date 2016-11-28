@@ -161,7 +161,9 @@ class API
         $response = Query::sendQuery($this->browser, $query);
         if ($query->isExtXML())
         {
+            error_log("Before load XML Stationboard");
             $result = simplexml_load_string($response->getContent());
+            error_log("After load XML Stationboard");
             $journeys = StationBoardJourney::createListFromXml($result, $query->date, $lines, $provider);
         }
         else {
