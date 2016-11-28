@@ -9,7 +9,7 @@ else
     $app['debug'] = true;
 
 // HTTP Cache
-$app['http_cache'] = true;
+$app['http_cache'] = false;
 
 // Buzz client, null uses Buzz\Client\FileGetContents
 $app['buzz.client'] = new Buzz\Client\Curl();
