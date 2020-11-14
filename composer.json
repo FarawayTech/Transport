@@ -1,5 +1,5 @@
 {
-    "name": "OpendataCH/Transport",
+    "name": "opendata-ch/transport",
     "description": "Swiss public transport API",
     "homepage": "http://transport.opendata.ch/",
     "license": "MIT",
@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": "7.1.33",
+        "php": "7.3.11",
         "ext-memcached": "*",
         "ext-mongo": "*",
         "ext-apcu": "*",
